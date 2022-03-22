@@ -40,48 +40,48 @@ resource "azurerm_subnet" "emea-cso-subnet" {
   address_prefixes     = ["172.16.1.0/24"]
 }
 
-# resource "azurerm_network_security_group" "l3-tt-sg" {
-#   name                = "l3TFsg"
-#   location            = var.location
-#   resource_group_name = azurerm_resource_group.l3-tt-rg.name
+resource "azurerm_network_security_group" "emea-cso-sg" {
+  name                = "${var.name}-case${var.caseNo}-sg"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.emea-cso-rg.name
 
-#   security_rule {
-#     name                       = "allowAll"
-#     priority                   = 1001
-#     direction                  = "Inbound"
-#     access                     = "Allow"
-#     protocol                   = "*"
-#     source_port_range          = "*"
-#     destination_port_range     = "*"
-#     source_address_prefix      = "*"
-#     destination_address_prefix = "*"
-#   }
-# }
+  security_rule {
+    name                       = "allowAll"
+    priority                   = 1001
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "*"
+    source_port_range          = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+}
 
-# resource "azurerm_public_ip" "l3-tt-instance-public-ip" {
-#   name                = "l3-tt-instance1-public-ip"
-#   location            = var.location
-#   resource_group_name = azurerm_resource_group.l3-tt-rg.name
-#   allocation_method   = "Dynamic"
-# }
+resource "azurerm_public_ip" "emea-cso-pub-ip" {
+  name                = "${var.name}-case${var.caseNo}-instance-public-ip"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.emea-cso-rg.name
+  allocation_method   = "Dynamic"
+}
 
-# resource "azurerm_network_interface" "l3-tt-interface" {
-#   name                = "l3TFint"
-#   location            = var.location
-#   resource_group_name = azurerm_resource_group.l3-tt-rg.name
+resource "azurerm_network_interface" "emea-cso-interface" {
+  name                = "${var.name}-case${var.caseNo}-net-interface"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.emea-cso-rg.name
 
-#   ip_configuration {
-#     name                          = "l3-instance1"
-#     subnet_id                     = azurerm_subnet.l3-tt-subnet.id
-#     private_ip_address_allocation = "Dynamic"
-#     public_ip_address_id          = azurerm_public_ip.l3-tt-instance-public-ip.id
-#   }
-# }
+  ip_configuration {
+    name                          = "emea-cso-ip-configuration"
+    subnet_id                     = azurerm_subnet.emea-cso-subnet.id
+    private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.emea-cso-pub-ip.id
+  }
+}
 
-# resource "azurerm_network_interface_security_group_association" "allow-ssh" {
-#   network_interface_id      = azurerm_network_interface.l3-tt-interface.id
-#   network_security_group_id = azurerm_network_security_group.l3-tt-sg.id
-# }
+resource "azurerm_network_interface_security_group_association" "emea-cso-allow-ssh" {
+  network_interface_id      = azurerm_network_interface.emea-cso-interface.id
+  network_security_group_id = azurerm_network_security_group.emea-cso-sg.id
+}
 
 # ### INSTANCE SECTION ###
 # # demo instance
