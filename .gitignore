@@ -1,0 +1,8 @@
+.terraform.lock.hcl
+.terraform/
+main.tf-with-LB.tf
+main.tf-with-LB.tf.bkp
+main.tf-without-LB.tf.bkp
+terraform.tfstate
+terraform.tfstate.backup
+misc.txt
