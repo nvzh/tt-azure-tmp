@@ -2,8 +2,13 @@
 location="germanywestcentral"                       # choose your region eg eastus, germanywestcentral, etc
 name="onovozhylov"                         # Something to identify your instances
 caseNo="12345678"                       # you can specify your case no here (optional)
-# os_name="redhat"                      # use "ubuntu" or  "redhat" or "centos"
-# os_version="8.3"                   # for ubuntu 16.04,18,04 etc. for redhat 7.8, 7.1, 8.1
+
+# Use "UbuntuServer" for 16.04-LTS/18.04-LTS and "0001-com-ubuntu-server-focal" for 20_04-lts-gen2
+# Use "redhat" or "centos"
+os_name="0001-com-ubuntu-server-focal"
+# For ubuntu 16.04-LTS,18.04-LTS etc. 
+# For redhat 7.8, 7.1, 8.1
+os_version="20_04-lts-gen2"
 
 # # Managers Info
 # manager_count="1"

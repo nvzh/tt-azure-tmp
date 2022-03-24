@@ -20,16 +20,16 @@ variable "caseNo" {
   description = "This is the case number to track the issue."
   default = "0"
 }
-# variable "os_name" {
-#   type        = string
-#   description = "Please type os name like the following, \nubuntu\nredhat\ncentos\nsuse"
-#   default = "ubuntu"
-# }
-# variable "os_version" {
-#   type        = string
-#   description = "Please type os Version. For ubuntu 16.04,18,04 etc. For redhat 7.8, 7.1, 8.1 etc"
-#   default = "20.04"
-# }
+variable "os_name" {
+  type        = string
+  description = "Please type os name like the following, \nUbuntuServer\nredhat\ncentos\nsuse"
+  default = "UbuntuServer"
+}
+variable "os_version" {
+  type        = string
+  description = "Please type os Version. For ubuntu 16.04-LTS,18,04-LTS etc. For redhat 7.8, 7.1, 8.1 etc"
+  default = "18.04-LTS"
+}
 # variable "worker_count" {
 #   type        = string
 #   description = "Please type the total number of worker"

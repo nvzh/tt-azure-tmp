@@ -3,11 +3,11 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 2.65"
+      version = "2.99.0"
     }
   }
 
-  required_version = ">= 1.1.0"
+  required_version = "1.1.7"
 }
 
 provider "azurerm" {
@@ -83,41 +83,41 @@ resource "azurerm_network_interface_security_group_association" "emea-cso-allow-
   network_security_group_id = azurerm_network_security_group.emea-cso-sg.id
 }
 
-# ### INSTANCE SECTION ###
-# # demo instance
-# resource "azurerm_virtual_machine" "l3-tt-vm" {
-#   name                  = "l3TFvm"
-#   location              = var.location
-#   resource_group_name   = azurerm_resource_group.l3-tt-rg.name
-#   network_interface_ids = [azurerm_network_interface.l3-tt-interface.id]
-#   vm_size               = "Standard_L8s_v2"
+### INSTANCE SECTION ###
+# demo instance
+resource "azurerm_virtual_machine" "emea-cso-vm" {
+  name                  = "${var.name}-case${var.caseNo}-vm"
+  location              = var.location
+  resource_group_name   = azurerm_resource_group.emea-cso-rg.name
+  network_interface_ids = [azurerm_network_interface.emea-cso-interface.id]
+  vm_size               = "Standard_D2s_v3"
 
-#   # this is a demo instance, so we can delete all data on termination
-#   delete_os_disk_on_termination    = true
-#   delete_data_disks_on_termination = true
+  # this is a demo instance, so we can delete all data on termination
+  delete_os_disk_on_termination    = true
+  delete_data_disks_on_termination = true
 
-#   storage_image_reference {
-#     publisher = "Canonical"
-#     offer     = "UbuntuServer"
-#     sku       = "18.04-LTS"
-#     version   = "latest"
-#   }
-#   storage_os_disk {
-#     name              = "myosdisk1"
-#     caching           = "ReadWrite"
-#     create_option     = "FromImage"
-#     managed_disk_type = "Standard_LRS"
-#   }
-#   os_profile {
-#     computer_name  = "l3-tt-vm"
-#     admin_username = "emea-user"
-#     #admin_password = "..."
-#   }
-#   os_profile_linux_config {
-#     disable_password_authentication = true
-#     ssh_keys {
-#       key_data = file("id_rsa.pub")
-#       path     = "/home/emea-user/.ssh/authorized_keys"
-#     }
-#   }
-# }
+  storage_image_reference {
+    publisher = "Canonical"
+    offer     = var.os_name
+    sku       = var.os_version
+    version   = "latest"
+  }
+  storage_os_disk {
+    name              = "emea-cso-osdisk"
+    caching           = "ReadWrite"
+    create_option     = "FromImage"
+    managed_disk_type = "Standard_LRS"
+  }
+  os_profile {
+    computer_name  = "emea-cso-vm"
+    admin_username = "azureuser"
+    #admin_password = "..."
+  }
+  os_profile_linux_config {
+    disable_password_authentication = true
+    ssh_keys {
+      key_data = file("id_rsa.pub")
+      path     = "/home/azureuser/.ssh/authorized_keys"
+    }
+  }
+}
