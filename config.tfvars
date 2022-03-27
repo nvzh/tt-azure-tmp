@@ -10,8 +10,8 @@ os_name="0001-com-ubuntu-server-focal"
 # For redhat 7.8, 7.1, 8.1
 os_version="20_04-lts-gen2"
 
-# # Managers Info
-# manager_count="1"
+# Managers Info
+manager_count="3"
 # manager_instance_type="c4.xlarge"
 
 # # MSR  Info

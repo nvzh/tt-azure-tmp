@@ -35,11 +35,11 @@ variable "os_version" {
 #   description = "Please type the total number of worker"
 #   default = 0
 # }
-# variable "manager_count" {
-#   type        = string
-#   description = "Please type the total number of manager"
-#   default = 1
-# }
+variable "manager_count" {
+  type        = string
+  description = "Please type the total number of manager"
+  default = 1
+}
 # variable "msr_count" {
 #   type        = string
 #   description = "Please type the total number of dtr"
