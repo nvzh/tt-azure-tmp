@@ -24,6 +24,15 @@ resource "azurerm_resource_group" "emea-cso-rg" {
   location = var.location
 }
 
+# Creating two random password for MKE username and Password
+resource "random_pet" "mke_username" {
+  length  = 2
+}
+resource "random_string" "mke_password" {
+  length  = 20
+  special = false
+}
+
 ### NETWORK SECTION ###
 # Create a virtual network
 resource "azurerm_virtual_network" "emea-cso-net" {
@@ -89,7 +98,7 @@ resource "azurerm_network_interface_security_group_association" "emea-cso-allow-
 ### MANAGER INSTANCE ###
 
 resource "azurerm_virtual_machine" "emea-cso-manager-vm" {
-  name                  = "${var.name}-case${var.caseNo}-vm${count.index}"
+  name                  = "${var.name}-case${var.caseNo}-managerVM-${count.index}"
   count                 = var.manager_count
   location              = var.location
   resource_group_name   = azurerm_resource_group.emea-cso-rg.name
@@ -107,13 +116,13 @@ resource "azurerm_virtual_machine" "emea-cso-manager-vm" {
     version   = "latest"
   }
   storage_os_disk {
-    name              = "emea-cso-manager-osdisk-1${count.index}"
+    name              = "emea-cso-manager-osdisk-${count.index}"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
   }
   os_profile {
-    computer_name  = "emea-cso-managerVM-1${count.index}"
+    computer_name  = "emea-cso-managerVM-${count.index}"
     admin_username = "azureuser"
     #admin_password = "..."
   }
@@ -163,7 +172,7 @@ resource "azurerm_network_interface_security_group_association" "emea-cso-worker
 ########################
 
 resource "azurerm_virtual_machine" "emea-cso-worker-vm" {
-  name                  = "${var.name}-case${var.caseNo}-workerVM${count.index}"
+  name                  = "${var.name}-case${var.caseNo}-workerVM-${count.index}"
   count                 = var.worker_count
   location              = var.location
   resource_group_name   = azurerm_resource_group.emea-cso-rg.name

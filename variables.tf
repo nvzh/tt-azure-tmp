@@ -45,11 +45,16 @@ variable "msr_count" {
   description = "Please type the total number of dtr"
   default = 0
 }
-# variable "win_worker_count" {
-#   type        = string
-#   description = "Please type the total number of Windows worker"
-#   default = 0
-# }
+variable "msr_version_3" {
+  type        = string
+  description = "Please type 1 if you need MSRv3"
+  default = 0
+}
+variable "win_worker_count" {
+  type        = string
+  description = "Please type the total number of Windows worker"
+  default = 0
+}
 # variable "msr_instance_type" {
 #   type        = string
 #   description = "Please type which Instance type you want. \n1. c4.xlarge : 4 vCPU - 4G MEM\n2. c4.2xlarge  : 8 vCPU - 15.7 G MEM\n3. m4.xlarge : 4 vCPU - 16 G MEM [ Best For Prod reproduce ]"
@@ -74,21 +79,25 @@ variable "msr_count" {
 #   type        = string
 #   description = "If you are using a customized key, please paste your public key here."
 # }
-# variable "image_repo" {
-#   type        = string
-#   default = "docker.io/mirantis"
-# }
-# variable "mcr_version" {
-#   type        = string
-#   description = "Please type your desired Mirantis Container Runtime version"
-#   default = "20.10.7"
-# }
-# variable "mke_version" {
-#   type        = string
-#   description = "Please type your desired Mirantis Kubernetes Engine version"
-#   default = "3.3.7"
-# }
-# variable "msr_version" {
-#   type        = string
-#   description = "Please type your desired Mirantis Secure Registry version"
-# }
+variable "image_repo" {
+  type        = string
+  default = "docker.io/mirantis"
+}
+variable "mcr_version" {
+  type        = string
+  description = "Please type your desired Mirantis Container Runtime version"
+  default = "20.10.10"
+}
+variable "mke_version" {
+  type        = string
+  description = "Please type your desired Mirantis Kubernetes Engine version"
+  default = "3.5.2"
+}
+variable "msr_version" {
+  type        = string
+  description = "Please type your desired Mirantis Secure Registry version"
+}
+variable "nfs_backend" {
+  type        = string
+  default = "0"
+}

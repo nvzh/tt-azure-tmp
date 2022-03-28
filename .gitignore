@@ -6,3 +6,5 @@ main.tf-without-LB.tf.bkp
 terraform.tfstate
 terraform.tfstate.backup
 misc.txt
+configGenerator.sh.bkp
+launchpad.yaml
