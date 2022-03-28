@@ -20,7 +20,7 @@ manager_count="3"
 # nfs_backend="1"                 # 1 for true and 0 for false
 
 # # Workers Info
-# worker_count="0"
+worker_count="2"
 # worker_instance_type="t2.micro"
 # win_worker_count="0"
 # win_worker_instance_type="c4.xlarge"

@@ -86,9 +86,9 @@ resource "azurerm_network_interface_security_group_association" "emea-cso-allow-
   network_security_group_id = azurerm_network_security_group.emea-cso-sg.id
 }
 
-### INSTANCE SECTION ###
-# demo instance
-resource "azurerm_virtual_machine" "emea-cso-vm" {
+### MANAGER INSTANCE ###
+
+resource "azurerm_virtual_machine" "emea-cso-manager-vm" {
   name                  = "${var.name}-case${var.caseNo}-vm${count.index}"
   count                 = var.manager_count
   location              = var.location
@@ -107,13 +107,87 @@ resource "azurerm_virtual_machine" "emea-cso-vm" {
     version   = "latest"
   }
   storage_os_disk {
-    name              = "emea-cso-osdisk${count.index}"
+    name              = "emea-cso-manager-osdisk-1${count.index}"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
   }
   os_profile {
-    computer_name  = "emea-cso-vm${count.index}"
+    computer_name  = "emea-cso-managerVM-1${count.index}"
+    admin_username = "azureuser"
+    #admin_password = "..."
+  }
+  os_profile_linux_config {
+    disable_password_authentication = true
+    ssh_keys {
+      key_data = file("id_rsa.pub")
+      path     = "/home/azureuser/.ssh/authorized_keys"
+    }
+  }
+}
+
+########################
+### WORKER INSTANCE ###
+########################
+
+resource "azurerm_public_ip" "emea-cso-worker-pub-ip" {
+  name                = "${var.name}-case${var.caseNo}-worker-instance-public-ip-${count.index}"
+  count               = var.worker_count
+  location            = var.location
+  resource_group_name = azurerm_resource_group.emea-cso-rg.name
+  allocation_method   = "Dynamic"
+}
+
+resource "azurerm_network_interface" "emea-cso-worker-interface" {
+  name                = "${var.name}-case${var.caseNo}-worker-net-interface-${count.index}"
+  count               = var.worker_count
+  location            = var.location
+  resource_group_name = azurerm_resource_group.emea-cso-rg.name
+
+  ip_configuration {
+    name                          = "emea-cso-ip-configuration"
+    subnet_id                     = azurerm_subnet.emea-cso-subnet.id
+    private_ip_address_allocation = "Dynamic"
+    public_ip_address_id = element(azurerm_public_ip.emea-cso-worker-pub-ip.*.id, count.index)
+  }
+}
+
+resource "azurerm_network_interface_security_group_association" "emea-cso-worker-allow-ssh" {
+  count                     = length(azurerm_network_interface.emea-cso-worker-interface)
+  network_interface_id      = azurerm_network_interface.emea-cso-worker-interface[count.index].id
+  network_security_group_id = azurerm_network_security_group.emea-cso-sg.id
+}
+
+########################
+########################
+########################
+
+resource "azurerm_virtual_machine" "emea-cso-worker-vm" {
+  name                  = "${var.name}-case${var.caseNo}-workerVM${count.index}"
+  count                 = var.worker_count
+  location              = var.location
+  resource_group_name   = azurerm_resource_group.emea-cso-rg.name
+  network_interface_ids = [element(azurerm_network_interface.emea-cso-worker-interface.*.id, count.index)]
+  vm_size               = "Standard_D2s_v3"
+
+  # this is a demo instance, so we can delete all data on termination
+  delete_os_disk_on_termination    = true
+  delete_data_disks_on_termination = true
+
+  storage_image_reference {
+    publisher = "Canonical"
+    offer     = var.os_name
+    sku       = var.os_version
+    version   = "latest"
+  }
+  storage_os_disk {
+    name              = "emea-cso-worker-osdisk-${count.index}"
+    caching           = "ReadWrite"
+    create_option     = "FromImage"
+    managed_disk_type = "Standard_LRS"
+  }
+  os_profile {
+    computer_name  = "emea-cso-workerVM-${count.index}"
     admin_username = "azureuser"
     #admin_password = "..."
   }
