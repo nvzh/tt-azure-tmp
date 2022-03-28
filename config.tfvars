@@ -11,16 +11,16 @@ os_name="0001-com-ubuntu-server-focal"
 os_version="20_04-lts-gen2"
 
 # Managers Info
-manager_count="3"
+manager_count="1"
 # manager_instance_type="c4.xlarge"
 
 # # MSR  Info
-# msr_count="0"
+msr_count="3"
 # msr_instance_type="c4.xlarge"
 # nfs_backend="1"                 # 1 for true and 0 for false
 
 # # Workers Info
-worker_count="2"
+worker_count="1"
 # worker_instance_type="t2.micro"
 # win_worker_count="0"
 # win_worker_instance_type="c4.xlarge"

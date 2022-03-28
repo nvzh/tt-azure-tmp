@@ -40,11 +40,11 @@ variable "manager_count" {
   description = "Please type the total number of manager"
   default = 1
 }
-# variable "msr_count" {
-#   type        = string
-#   description = "Please type the total number of dtr"
-#   default = 0
-# }
+variable "msr_count" {
+  type        = string
+  description = "Please type the total number of dtr"
+  default = 0
+}
 # variable "win_worker_count" {
 #   type        = string
 #   description = "Please type the total number of Windows worker"
