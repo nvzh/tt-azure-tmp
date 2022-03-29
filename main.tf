@@ -85,7 +85,7 @@ resource "azurerm_network_interface" "emea-cso-interface" {
     name                          = "emea-cso-ip-configuration"
     subnet_id                     = azurerm_subnet.emea-cso-subnet.id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id = element(azurerm_public_ip.emea-cso-pub-ip.*.id, count.index)
+    public_ip_address_id          = element(azurerm_public_ip.emea-cso-pub-ip.*.id, count.index)
   }
 }
 
@@ -103,7 +103,7 @@ resource "azurerm_virtual_machine" "emea-cso-manager-vm" {
   location              = var.location
   resource_group_name   = azurerm_resource_group.emea-cso-rg.name
   network_interface_ids = [element(azurerm_network_interface.emea-cso-interface.*.id, count.index)]
-  vm_size               = "Standard_D2s_v3"
+  vm_size               = var.manager_instance_type
 
   # this is a demo instance, so we can delete all data on termination
   delete_os_disk_on_termination    = true
@@ -177,7 +177,7 @@ resource "azurerm_virtual_machine" "emea-cso-worker-vm" {
   location              = var.location
   resource_group_name   = azurerm_resource_group.emea-cso-rg.name
   network_interface_ids = [element(azurerm_network_interface.emea-cso-worker-interface.*.id, count.index)]
-  vm_size               = "Standard_D2s_v3"
+  vm_size               = var.worker_instance_type
 
   # this is a demo instance, so we can delete all data on termination
   delete_os_disk_on_termination    = true
@@ -197,8 +197,7 @@ resource "azurerm_virtual_machine" "emea-cso-worker-vm" {
   }
   os_profile {
     computer_name  = "emea-cso-workerVM-${count.index}"
-    admin_username = "azureuser"
-    #admin_password = "..."
+    admin_username = "azureuser"    
   }
   os_profile_linux_config {
     disable_password_authentication = true
@@ -251,7 +250,7 @@ resource "azurerm_virtual_machine" "emea-cso-msr-vm" {
   location              = var.location
   resource_group_name   = azurerm_resource_group.emea-cso-rg.name
   network_interface_ids = [element(azurerm_network_interface.emea-cso-msr-interface.*.id, count.index)]
-  vm_size               = "Standard_D2s_v3"
+  vm_size               = var.msr_instance_type
 
   # this is a demo instance, so we can delete all data on termination
   delete_os_disk_on_termination    = true

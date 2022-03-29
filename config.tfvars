@@ -12,17 +12,17 @@ os_version="18.04-LTS"
 
 # Managers Info
 manager_count="1"
-# manager_instance_type="c4.xlarge"
+manager_instance_type="Standard_D2s_v3"
 
 # # MSR  Info
 msr_count="1"
 msr_version_3="0"
-# msr_instance_type="c4.xlarge"
-nfs_backend="0"                 # 1 for true and 0 for false
+msr_instance_type="Standard_D2s_v3"
+nfs_backend="0"                 # 1 for true and 0 for fals
 
 # # Workers Info
 worker_count="1"
-# worker_instance_type="t2.micro"
+worker_instance_type="Standard_D2s_v3"
 win_worker_count="0"
 # win_worker_instance_type="c4.xlarge"
 

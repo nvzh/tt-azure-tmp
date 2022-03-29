@@ -55,21 +55,21 @@ variable "win_worker_count" {
   description = "Please type the total number of Windows worker"
   default = 0
 }
-# variable "msr_instance_type" {
-#   type        = string
-#   description = "Please type which Instance type you want. \n1. c4.xlarge : 4 vCPU - 4G MEM\n2. c4.2xlarge  : 8 vCPU - 15.7 G MEM\n3. m4.xlarge : 4 vCPU - 16 G MEM [ Best For Prod reproduce ]"
-#   default = "c4.xlarge"
-# }
-# variable "worker_instance_type" {
-#   type        = string
-#   description = "Please type which Instance type you want. \n1. c4.xlarge : 4 vCPU - 4G MEM\n2. c4.2xlarge  : 8 vCPU - 15.7 G MEM\n3. m4.xlarge : 4 vCPU - 16 G MEM [ Best For Prod reproduce ]"
-#   default = "c4.xlarge"
-# }
-# variable "manager_instance_type" {
-#   type        = string
-#   description = "Please type which Instance type you want. \n1. c4.xlarge : 4 vCPU - 4G MEM\n2. c4.2xlarge  : 8 vCPU - 15.7 G MEM\n3. m4.xlarge : 4 vCPU - 16 G MEM [ Best For Prod reproduce ]"
-#   default = "c4.xlarge"
-# }
+variable "msr_instance_type" {
+  type        = string
+  description = "Please type which Instance type you want. \n1. c4.xlarge : 4 vCPU - 4G MEM\n2. c4.2xlarge  : 8 vCPU - 15.7 G MEM\n3. m4.xlarge : 4 vCPU - 16 G MEM [ Best For Prod reproduce ]"
+  default = "Standard_D2s_v3"
+}
+variable "worker_instance_type" {
+  type        = string
+  description = "Please type which Instance type you want. \n1. c4.xlarge : 4 vCPU - 4G MEM\n2. c4.2xlarge  : 8 vCPU - 15.7 G MEM\n3. m4.xlarge : 4 vCPU - 16 G MEM [ Best For Prod reproduce ]"
+  default = "Standard_D2s_v3"
+}
+variable "manager_instance_type" {
+  type        = string
+  description = "Please type which Instance type you want. \n1. c4.xlarge : 4 vCPU - 4G MEM\n2. c4.2xlarge  : 8 vCPU - 15.7 G MEM\n3. m4.xlarge : 4 vCPU - 16 G MEM [ Best For Prod reproduce ]"
+  default = "Standard_D2s_v3"
+}
 # variable "win_worker_instance_type" {
 #   type        = string
 #   description = "Please type which Instance type you want. \n1. c4.xlarge : 4 vCPU - 4G MEM\n2. c4.2xlarge  : 8 vCPU - 15.7 G MEM\n3. m4.xlarge : 4 vCPU - 16 G MEM [ Best For Prod reproduce ]"
