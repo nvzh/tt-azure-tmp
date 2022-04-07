@@ -2,22 +2,23 @@
 
 # Sourcing config
 . ./config.tfvars
-if [[ $os_name == "UbuntuServer" ]] 
-then
-  amiUserName="azureuser"
-elif [[ $os_name == "redhat" ]] 
-then
-  amiUserName="ec2-user"
-elif [[ $os_name == "centos" ]] 
-then
-  amiUserName="centos"
-elif [[ $os_name == "suse" ]] 
-then
-  amiUserName="ec2-user"
-else
-  echo "wrong Operating System Name"
-fi
+# if [[ $os_name == "UbuntuServer" ]] 
+# then
+#   amiUserName="azureuser"
+# elif [[ $os_name == "RHEL" ]] 
+# then
+#   amiUserName="azureuser"
+# elif [[ $os_name == "centos" ]] 
+# then
+#   amiUserName="centos"
+# elif [[ $os_name == "suse" ]] 
+# then
+#   amiUserName="ec2-user"
+# else
+#   echo "wrong Operating System Name"
+# fi
 
+amiUserName="azureuser"
 RG="$name-case$caseNo-rg"
 
 #if [[ $msr_count != 0 && $msr_version_3 != 1 ]]
@@ -328,6 +329,8 @@ EOL
     imageRepo: "$image_repo"
     adminUsername: $mkeadminUsername
     adminPassword: $mkeadminPassword
+    installFlags:
+    - --force-minimums
 EOL
 
     ####### Generating MCR Configuration
