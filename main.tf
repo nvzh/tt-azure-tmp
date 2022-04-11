@@ -188,7 +188,9 @@ resource "azurerm_virtual_machine" "emea-cso-worker-vm" {
 
   storage_image_reference {
     #publisher = "Canonical"
-    publisher = "Canonical"
+    publisher = "${ var.os_name == "UbuntuServer" ? "Canonical" : 
+                    (var.os_name == "RHEL" ? "redhat" : 
+                    (var.os_name == "0001-com-ubuntu-server-focal" ? "Canonical" : "here-should-be-suse" ))}"
     offer     = var.os_name
     sku       = var.os_version
     version   = "latest"
@@ -262,7 +264,9 @@ resource "azurerm_virtual_machine" "emea-cso-msr-vm" {
 
   storage_image_reference {
     #publisher = "redhat"
-    publisher = "Canonical"
+    publisher = "${ var.os_name == "UbuntuServer" ? "Canonical" : 
+                    (var.os_name == "RHEL" ? "redhat" : 
+                    (var.os_name == "0001-com-ubuntu-server-focal" ? "Canonical" : "here-should-be-suse" ))}"
     offer     = var.os_name
     sku       = var.os_version
     version   = "latest"
