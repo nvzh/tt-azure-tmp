@@ -126,13 +126,17 @@ EOL
             for count in $(seq $win_worker_count)
             do 
                 index=`expr $count - 1` #because index_key starts with 0
-                win_worker_address=$(cat ./terraform.tfstate |  jq --argjson cnt "$index" -r '.resources[] | select(.name=="winNode") | .instances[] | select(.index_key==$cnt) | .attributes.public_dns')
+                win_worker_address=$(az vm list-ip-addresses \
+                --resource-group "$RG" \
+                --name "$name"-case"$caseNo"-winVM-"$index"  \
+                --query "[].virtualMachine.network.publicIpAddresses[0].ipAddress" \
+                --output tsv)
                 mkeadminPassword=$(cat ./terraform.tfstate 2>/dev/null | jq -r '.resources[] | select(.name=="mke_password") | .instances[] | .attributes.id' 2>/dev/null)
                 cat >> launchpad.yaml << EOL
   - role: worker
     winRM:
       address: $win_worker_address
-      user: Administrator
+      user: azureuser
       password: $mkeadminPassword
       port: 5986
       useHTTPS: true
@@ -305,13 +309,17 @@ EOL
             for count in $(seq $win_worker_count)
             do 
                 index=`expr $count - 1` #because index_key starts with 0
-                win_worker_address=$(cat ./terraform.tfstate |  jq --argjson cnt "$index" -r '.resources[] | select(.name=="winNode") | .instances[] | select(.index_key==$cnt) | .attributes.public_dns')
+                win_worker_address=$(az vm list-ip-addresses \
+                --resource-group "$RG" \
+                --name "$name"-case"$caseNo"-winVM-"$index"  \
+                --query "[].virtualMachine.network.publicIpAddresses[0].ipAddress" \
+                --output tsv)
                 mkeadminPassword=$(cat ./terraform.tfstate 2>/dev/null | jq -r '.resources[] | select(.name=="mke_password") | .instances[] | .attributes.id' 2>/dev/null)
                 cat >> launchpad.yaml << EOL
   - role: worker
     winRM:
       address: $win_worker_address
-      user: Administrator
+      user: azureuser
       password: $mkeadminPassword
       port: 5986
       useHTTPS: true

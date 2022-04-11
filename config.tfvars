@@ -5,10 +5,10 @@ caseNo="12345678"                       # you can specify your case no here (opt
 
 # Use "UbuntuServer" for 16.04-LTS/18.04-LTS and "0001-com-ubuntu-server-focal" for 20_04-lts-gen2
 # Use "RHEL" or "centos?"
-os_name="RHEL"  # offer
+os_name="UbuntuServer"  # offer
 # For ubuntu 16.04-LTS,18.04-LTS etc. 
 # For RHEL use 79-gen2
-os_version="79-gen2"   # sku
+os_version="18.04-LTS"   # sku
 
 # Managers Info
 manager_count="1"
@@ -23,13 +23,13 @@ nfs_backend="0"                 # 1 for true and 0 for fals
 # # Workers Info
 worker_count="0"
 worker_instance_type="Standard_D2s_v3"
-win_worker_count="0"
-# win_worker_instance_type="c4.xlarge"
+win_worker_count="3"
+win_worker_instance_type="Standard_D4s_v3"
 
 # MKE MSR MCR info
 # Please change only the following informations if you want to use `t deploy cluster`.
 mcr_version="20.10.10"          # Please use specific minor engine version.
-mke_version="3.5.1"             # MKE Version
+mke_version="3.5.2"             # MKE Version
 msr_version="2.9.1"             # MSR Version
 image_repo="docker.io/mirantis" #For older version use docker.io/docker , specifically use :
 # docker.io/docker for images up-to: 3.1.14, 3.2.7, 3.3.1  (taken from https://hub.docker.com/r/docker/ucp/tags?page=3&ordering=name )
