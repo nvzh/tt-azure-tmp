@@ -112,7 +112,8 @@ resource "azurerm_virtual_machine" "emea-cso-manager-vm" {
   storage_image_reference {
     publisher = "${ var.os_name == "UbuntuServer" ? "Canonical" : 
                     (var.os_name == "RHEL" ? "redhat" : 
-                    (var.os_name == "0001-com-ubuntu-server-focal" ? "Canonical" : "here-should-be-suse" ))}"
+                    (var.os_name == "0001-com-ubuntu-server-focal" ? "Canonical" : 
+                    (var.os_name == "CentOS" ? "OpenLogic" : "here-should-be-suse" )))}"
     #publisher = "Canonical"
     offer     = var.os_name
     sku       = var.os_version
@@ -189,7 +190,8 @@ resource "azurerm_virtual_machine" "emea-cso-worker-vm" {
     #publisher = "Canonical"
     publisher = "${ var.os_name == "UbuntuServer" ? "Canonical" : 
                     (var.os_name == "RHEL" ? "redhat" : 
-                    (var.os_name == "0001-com-ubuntu-server-focal" ? "Canonical" : "here-should-be-suse" ))}"
+                    (var.os_name == "0001-com-ubuntu-server-focal" ? "Canonical" : 
+                    (var.os_name == "CentOS" ? "OpenLogic" : "here-should-be-suse" )))}"
     offer     = var.os_name
     sku       = var.os_version
     version   = "latest"
@@ -265,7 +267,8 @@ resource "azurerm_virtual_machine" "emea-cso-msr-vm" {
     #publisher = "redhat"
     publisher = "${ var.os_name == "UbuntuServer" ? "Canonical" : 
                     (var.os_name == "RHEL" ? "redhat" : 
-                    (var.os_name == "0001-com-ubuntu-server-focal" ? "Canonical" : "here-should-be-suse" ))}"
+                    (var.os_name == "0001-com-ubuntu-server-focal" ? "Canonical" : 
+                    (var.os_name == "CentOS" ? "OpenLogic" : "here-should-be-suse" )))}"
     offer     = var.os_name
     sku       = var.os_version
     version   = "latest"

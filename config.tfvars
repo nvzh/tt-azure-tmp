@@ -4,10 +4,11 @@ name="onovozhylov"                         # Something to identify your instance
 caseNo="12345678"                       # you can specify your case no here (optional)
 
 # Use "UbuntuServer" for 16.04-LTS/18.04-LTS and "0001-com-ubuntu-server-focal" for 20_04-lts-gen2
-# Use "RHEL" or "centos?"
+# Use "RHEL" or "CentOS"
 os_name="UbuntuServer"  # offer
-# For ubuntu 16.04-LTS,18.04-LTS etc. 
-# For RHEL use 79-gen2
+# Ubuntu: 16.04-LTS, 18.04-LTS 
+# RHEL: 79-gen2
+# CentOS: 7_8-gen2, 7_9-gen2
 os_version="18.04-LTS"   # sku
 
 # Managers Info
@@ -15,15 +16,15 @@ manager_count="1"
 manager_instance_type="Standard_D2s_v3"
 
 # # MSR  Info
-msr_count="0"
-msr_version_3="0"
+msr_count="3"
+msr_version_3="0"    # not available yet
 msr_instance_type="Standard_D2s_v3"
-nfs_backend="0"                 # 1 for true and 0 for fals
+nfs_backend="0"    # not available yet                 # 1 for true and 0 for fals
 
 # # Workers Info
 worker_count="0"
 worker_instance_type="Standard_D2s_v3"
-win_worker_count="3"
+win_worker_count="0"
 win_worker_instance_type="Standard_D4s_v3"
 
 # MKE MSR MCR info
