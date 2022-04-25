@@ -16,7 +16,7 @@ manager_count="1"
 manager_instance_type="Standard_D2s_v3"
 
 # # MSR  Info
-msr_count="3"
+msr_count="1"
 msr_version_3="0"    # not available yet
 msr_instance_type="Standard_D2s_v3"
 nfs_backend="0"    # not available yet                 # 1 for true and 0 for fals
@@ -24,7 +24,7 @@ nfs_backend="0"    # not available yet                 # 1 for true and 0 for fa
 # # Workers Info
 worker_count="0"
 worker_instance_type="Standard_D2s_v3"
-win_worker_count="0"
+win_worker_count="1"
 win_worker_instance_type="Standard_D4s_v3"
 
 # MKE MSR MCR info

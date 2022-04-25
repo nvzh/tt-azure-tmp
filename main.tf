@@ -98,6 +98,8 @@ resource "azurerm_network_interface_security_group_association" "emea-cso-allow-
 ### MANAGER INSTANCE ###
 
 resource "azurerm_virtual_machine" "emea-cso-manager-vm" {
+  depends_on = [azurerm_network_interface_security_group_association.emea-cso-allow-ssh]
+
   name                  = "${var.name}-case${var.caseNo}-managerVM-${count.index}"
   count                 = var.manager_count
   location              = var.location
@@ -175,6 +177,8 @@ resource "azurerm_network_interface_security_group_association" "emea-cso-worker
 ########################
 
 resource "azurerm_virtual_machine" "emea-cso-worker-vm" {
+  depends_on = [azurerm_network_interface_security_group_association.emea-cso-worker-allow-ssh]
+
   name                  = "${var.name}-case${var.caseNo}-workerVM-${count.index}"
   count                 = var.worker_count
   location              = var.location
@@ -252,6 +256,8 @@ resource "azurerm_network_interface_security_group_association" "emea-cso-msr-al
 ########################
 
 resource "azurerm_virtual_machine" "emea-cso-msr-vm" {
+    depends_on = [azurerm_network_interface_security_group_association.emea-cso-msr-allow-ssh]
+
   name                  = "${var.name}-case${var.caseNo}-msrVM-${count.index}"
   count                 = var.msr_count
   location              = var.location
@@ -330,6 +336,8 @@ resource "azurerm_network_interface_security_group_association" "emea-cso-win-al
 
 #resource "azurerm_windows_virtual_machine" "emea-cso-win-vm" {
 resource "azurerm_virtual_machine" "emea-cso-win-vm" {
+    depends_on = [azurerm_network_interface_security_group_association.emea-cso-win-allow-ssh]
+
     name                  = "${var.name}-case${var.caseNo}-winVM-${count.index}"
     count                 = var.win_worker_count
     location              = var.location
