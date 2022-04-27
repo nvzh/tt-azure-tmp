@@ -7,7 +7,7 @@ terraform {
     }
   }
 
-  required_version = "1.1.7"
+  required_version = "~>1.1.7"
 }
 
 provider "azurerm" {
@@ -93,6 +93,15 @@ resource "azurerm_network_interface_security_group_association" "emea-cso-allow-
   count                     = length(azurerm_network_interface.emea-cso-interface)
   network_interface_id      = azurerm_network_interface.emea-cso-interface[count.index].id
   network_security_group_id = azurerm_network_security_group.emea-cso-sg.id
+}
+
+# Create storage account for MSR3
+resource "azurerm_storage_account" "emea-cso-sa" {
+  name                      = "case${var.caseNo}sa"
+  resource_group_name       = azurerm_resource_group.emea-cso-rg.name
+  location                  = var.location
+  account_tier              = "Standard"
+  account_replication_type  = "LRS"
 }
 
 ### MANAGER INSTANCE ###
@@ -270,7 +279,6 @@ resource "azurerm_virtual_machine" "emea-cso-msr-vm" {
   delete_data_disks_on_termination = true
 
   storage_image_reference {
-    #publisher = "redhat"
     publisher = "${ var.os_name == "UbuntuServer" ? "Canonical" : 
                     (var.os_name == "RHEL" ? "redhat" : 
                     (var.os_name == "0001-com-ubuntu-server-focal" ? "Canonical" : 
@@ -301,6 +309,27 @@ resource "azurerm_virtual_machine" "emea-cso-msr-vm" {
 ########################
 ### WIN INSTANCE ###
 ########################
+
+# resource azurerm_network_security_group "win_worker_nsg" {
+#   name                = "${var.name}-case${var.caseNo}-win-worker-nsg"
+#   location            = var.location
+#   resource_group_name = azurerm_resource_group.emea-cso-rg.name
+# }
+
+# resource "azurerm_network_security_rule" "win-worker-nsr" {
+#   name                        = "Allow-All"
+#   description                 = "Allow all for win-worker"
+#   priority                    = 100
+#   direction                   = "Inbound"
+#   access                      = "Allow"
+#   protocol                    = "*"
+#   source_address_prefix       = "*"
+#   source_port_range           = "*"
+#   destination_port_range      = "*"
+#   destination_address_prefix  = "*"
+#   resource_group_name         = azurerm_resource_group.emea-cso-rg.name
+#   network_security_group_name = azurerm_network_security_group.win_worker_nsg.name
+# }
 
 resource "azurerm_public_ip" "emea-cso-win-pub-ip" {
   name                = "${var.name}-case${var.caseNo}-win-instance-public-ip-${count.index}"
