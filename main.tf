@@ -139,6 +139,12 @@ resource "azurerm_virtual_machine" "emea-cso-manager-vm" {
   os_profile {
     computer_name  = "emea-cso-managerVM-${count.index}"
     admin_username = "azureuser"
+    custom_data    = <<-EOF
+#cloud-config
+bootcmd:
+ - >
+   sudo systemctl stop firewalld && sudo systemctl disable firewalld
+EOF
   }
   os_profile_linux_config {
     disable_password_authentication = true
@@ -148,6 +154,17 @@ resource "azurerm_virtual_machine" "emea-cso-manager-vm" {
     }
   }
 }
+
+# os_profile {
+#     computer_name  = format("%s%03d", "worker-", (count.index + 1))
+#     admin_username = "ubuntu"
+#     custom_data    = <<-EOF
+# #cloud-config
+# bootcmd:
+#  - >
+#    echo 'network: {config: disabled}' > /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
+# EOF
+#   }
 
 ########################
 ### WORKER INSTANCE ###
@@ -217,7 +234,13 @@ resource "azurerm_virtual_machine" "emea-cso-worker-vm" {
   }
   os_profile {
     computer_name  = "emea-cso-workerVM-${count.index}"
-    admin_username = "azureuser"    
+    admin_username = "azureuser"
+    custom_data    = <<-EOF
+#cloud-config
+bootcmd:
+ - >
+   sudo systemctl stop firewalld && sudo systemctl disable firewalld
+EOF    
   }
   os_profile_linux_config {
     disable_password_authentication = true
@@ -296,6 +319,12 @@ resource "azurerm_virtual_machine" "emea-cso-msr-vm" {
   os_profile {
     computer_name  = "emea-cso-msrVM-${count.index}"
     admin_username = "azureuser"
+    custom_data    = <<-EOF
+#cloud-config
+bootcmd:
+ - >
+   sudo systemctl stop firewalld && sudo systemctl disable firewalld
+EOF
   }
   os_profile_linux_config {
     disable_password_authentication = true
