@@ -109,7 +109,7 @@ resource "azurerm_storage_account" "emea-cso-sa" {
 resource "azurerm_virtual_machine" "emea-cso-manager-vm" {
   depends_on = [azurerm_network_interface_security_group_association.emea-cso-allow-ssh]
 
-  name                  = "${var.name}-case${var.caseNo}-managerVM-${count.index}"
+  name                  = "${var.name}-case${var.caseNo}-managervm-${count.index}"
   count                 = var.manager_count
   location              = var.location
   resource_group_name   = azurerm_resource_group.emea-cso-rg.name
@@ -137,7 +137,7 @@ resource "azurerm_virtual_machine" "emea-cso-manager-vm" {
     managed_disk_type = "Standard_LRS"
   }
   os_profile {
-    computer_name  = "emea-cso-managerVM-${count.index}"
+    computer_name  = "emea-cso-managervm-${count.index}"
     admin_username = "azureuser"
     custom_data    = <<-EOF
 #cloud-config
@@ -154,17 +154,6 @@ EOF
     }
   }
 }
-
-# os_profile {
-#     computer_name  = format("%s%03d", "worker-", (count.index + 1))
-#     admin_username = "ubuntu"
-#     custom_data    = <<-EOF
-# #cloud-config
-# bootcmd:
-#  - >
-#    echo 'network: {config: disabled}' > /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
-# EOF
-#   }
 
 ########################
 ### WORKER INSTANCE ###
@@ -205,7 +194,7 @@ resource "azurerm_network_interface_security_group_association" "emea-cso-worker
 resource "azurerm_virtual_machine" "emea-cso-worker-vm" {
   depends_on = [azurerm_network_interface_security_group_association.emea-cso-worker-allow-ssh]
 
-  name                  = "${var.name}-case${var.caseNo}-workerVM-${count.index}"
+  name                  = "${var.name}-case${var.caseNo}-workervm-${count.index}"
   count                 = var.worker_count
   location              = var.location
   resource_group_name   = azurerm_resource_group.emea-cso-rg.name
@@ -233,7 +222,7 @@ resource "azurerm_virtual_machine" "emea-cso-worker-vm" {
     managed_disk_type = "Standard_LRS"
   }
   os_profile {
-    computer_name  = "emea-cso-workerVM-${count.index}"
+    computer_name  = "emea-cso-workervm-${count.index}"
     admin_username = "azureuser"
     custom_data    = <<-EOF
 #cloud-config
@@ -290,7 +279,7 @@ resource "azurerm_network_interface_security_group_association" "emea-cso-msr-al
 resource "azurerm_virtual_machine" "emea-cso-msr-vm" {
     depends_on = [azurerm_network_interface_security_group_association.emea-cso-msr-allow-ssh]
 
-  name                  = "${var.name}-case${var.caseNo}-msrVM-${count.index}"
+  name                  = "${var.name}-case${var.caseNo}-msrvm-${count.index}"
   count                 = var.msr_count
   location              = var.location
   resource_group_name   = azurerm_resource_group.emea-cso-rg.name
@@ -317,7 +306,7 @@ resource "azurerm_virtual_machine" "emea-cso-msr-vm" {
     managed_disk_type = "Standard_LRS"
   }
   os_profile {
-    computer_name  = "emea-cso-msrVM-${count.index}"
+    computer_name  = "emea-cso-msrvm-${count.index}"
     admin_username = "azureuser"
     custom_data    = <<-EOF
 #cloud-config
@@ -396,7 +385,7 @@ resource "azurerm_network_interface_security_group_association" "emea-cso-win-al
 resource "azurerm_virtual_machine" "emea-cso-win-vm" {
     depends_on = [azurerm_network_interface_security_group_association.emea-cso-win-allow-ssh]
 
-    name                  = "${var.name}-case${var.caseNo}-winVM-${count.index}"
+    name                  = "${var.name}-case${var.caseNo}-winvm-${count.index}"
     count                 = var.win_worker_count
     location              = var.location
     resource_group_name   = azurerm_resource_group.emea-cso-rg.name
