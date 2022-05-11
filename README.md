@@ -2,6 +2,7 @@
 ### To Do
 - Add NFS VM
 - DNS names instead of IPs
+- Add MSR 3.0.x 
 - Change outdated "azurerm_virtual_machine" resource to "azurerm_linux(windows)_virtual_machine"
 - Integrate Azure project to Arif's TerraTrain
 - Change "subscription_id" and "tenant_id" to variables
