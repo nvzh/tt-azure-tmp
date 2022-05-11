@@ -9,4 +9,6 @@
 - Get rid of "--force-minimums" flag in MKE config
 
 ### Known Issues
-- Windows VM fails to spin up if cluster has MSR worker
+- Windows VM fails to spin up if cluster has MSR worker (Azure module)
+- WinRM without IP in launchpad.yaml (AWS module)
+- Durin creation of a cluster in AWS some Azure objects are being created (rg, sa, sg, net, etc.)
