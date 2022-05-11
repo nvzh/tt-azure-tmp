@@ -66,7 +66,7 @@ aws_msr_version_3="0"                  # Put 1 for MSR version 3
 
 # Worker Info
 aws_worker_count="3"
-aws_win_worker_count="3"
+aws_win_worker_count="0"
 
 #---------------------------------------------------------------------------------------------
 # Advanced and Beta config
