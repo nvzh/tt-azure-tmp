@@ -653,9 +653,9 @@ fi
 
 }
 
-if [[ $aws_manager_count -ne 0 && $manager_count -eq 0 ]]; then
+if [[ $aws_manager_count -gt 0 && $manager_count -eq 0 ]]; then
   aws_config
-elif [[ $aws_manager_count -eq 0 && $manager_count -ne 0 ]]; then
+elif [[ $aws_manager_count -eq 0 && $manager_count -gt 0 ]]; then
   azure_config
 else
   echo "Do not use both AWS and Azure at the same time. Choose one of them."
