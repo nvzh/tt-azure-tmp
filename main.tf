@@ -1,5 +1,5 @@
 module "common" {
-  source   = "./modules/common"
+  source   = "./modules/azure/common"
   location = var.location
   name     = var.name
   caseNo   = var.caseNo
@@ -7,14 +7,14 @@ module "common" {
 }
 
 module "vnet" {
-  source   = "./modules/vnet"
+  source   = "./modules/azure/vnet"
   location = var.location
   name     = var.name
   caseNo   = var.caseNo
 }
 
 module "manager" {
-  source                = "./modules/manager"
+  source                = "./modules/azure/manager"
   caseNo                = var.caseNo
   manager_count         = var.manager_count
   name                  = var.name
@@ -28,7 +28,7 @@ module "manager" {
 }
 
 module "worker" {
-  source                = "./modules/worker"
+  source                = "./modules/azure/worker"
   caseNo                = var.caseNo
   worker_count          = var.worker_count
   name                  = var.name
@@ -42,7 +42,7 @@ module "worker" {
 }
 
 module "msr-worker" {
-  source                = "./modules/msr-worker"
+  source                = "./modules/azure/msr-worker"
   caseNo                = var.caseNo
   msr_count             = var.msr_count
   name                  = var.name
@@ -56,7 +56,7 @@ module "msr-worker" {
 }
 
 module "win-worker" {
-  source                = "./modules/win-worker"
+  source                = "./modules/azure/win-worker"
   caseNo                = var.caseNo
   win_worker_count      = var.win_worker_count
   name                  = var.name
@@ -73,27 +73,27 @@ module "win-worker" {
 ###
 # AWS Section
 ###
-module "aws" {
-  source                = "./modules/aws"
-  aws_region                        = var.aws_region
-  aws_profile                   = var.aws_profile
-  aws_shared_credentials_file   = var.aws_shared_credentials_file
-  aws_name                          = var.aws_name
-  aws_caseNo                        = var.aws_caseNo
-  aws_os_name                       = var.aws_os_name
-  aws_os_version                    = var.aws_os_version
-  aws_manager_count                 = var.aws_manager_count
-  aws_manager_instance_type         = var.aws_manager_instance_type
-  aws_msr_count                     = var.aws_msr_count
-  aws_msr_instance_type             = var.aws_msr_instance_type
-  aws_nfs_backend                   = var.aws_nfs_backend
-  aws_worker_count                  = var.aws_worker_count
-  aws_worker_instance_type          = var.aws_worker_instance_type
-  aws_win_worker_count              = var.aws_win_worker_count
-  aws_win_worker_instance_type      = var.aws_win_worker_instance_type
-  aws_mcr_version                   = var.aws_mcr_version
-  aws_mke_version                   = var.aws_mke_version
-  aws_msr_version                   = var.aws_msr_version
-  aws_image_repo                    = var.aws_image_repo
-  aws_publicKey                     = var.aws_publicKey
-}
+# module "aws" {
+#   source                = "./modules/aws"
+#   aws_region                        = var.aws_region
+#   aws_profile                   = var.aws_profile
+#   aws_shared_credentials_file   = var.aws_shared_credentials_file
+#   aws_name                          = var.aws_name
+#   aws_caseNo                        = var.aws_caseNo
+#   aws_os_name                       = var.aws_os_name
+#   aws_os_version                    = var.aws_os_version
+#   aws_manager_count                 = var.aws_manager_count
+#   aws_manager_instance_type         = var.aws_manager_instance_type
+#   aws_msr_count                     = var.aws_msr_count
+#   aws_msr_instance_type             = var.aws_msr_instance_type
+#   aws_nfs_backend                   = var.aws_nfs_backend
+#   aws_worker_count                  = var.aws_worker_count
+#   aws_worker_instance_type          = var.aws_worker_instance_type
+#   aws_win_worker_count              = var.aws_win_worker_count
+#   aws_win_worker_instance_type      = var.aws_win_worker_instance_type
+#   aws_mcr_version                   = var.aws_mcr_version
+#   aws_mke_version                   = var.aws_mke_version
+#   aws_msr_version                   = var.aws_msr_version
+#   aws_image_repo                    = var.aws_image_repo
+#   aws_publicKey                     = var.aws_publicKey
+# }

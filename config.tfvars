@@ -12,7 +12,7 @@ os_name="UbuntuServer"  # offer
 os_version="18.04-LTS"   # sku
 
 # Managers Info
-manager_count="0"
+manager_count="1"
 manager_instance_type="Standard_D2s_v3"
 
 # # MSR  Info
@@ -55,17 +55,17 @@ aws_os_version="20.04"                 # for ubuntu 16.04,18.04 ... For redhat 7
 aws_mcr_version="20.10.7"              # Please use specific minor engine version.
 
 # MKE Info
-aws_manager_count="3"                  # Number of Managers
+aws_manager_count="0"                  # Number of Managers
 aws_mke_version="3.5.2"                # MKE Version
 
 # MSR Info
-aws_msr_count="3"                      # Number of MSR replicas
+aws_msr_count="0"                      # Number of MSR replicas
 aws_msr_version="2.9.5"                # For MSR Classic: 2.8.8, 2.9.7 etc. For MSRv3 choose the helm chart version 1.0.0,1.0.1 etc.
-aws_nfs_backend="1"                    # "1" for true and "0" for false, BUT: always put "1" for MSRv3, because we must have NFS for MSR3
+aws_nfs_backend="0"                    # "1" for true and "0" for false, BUT: always put "1" for MSRv3, because we must have NFS for MSR3
 aws_msr_version_3="0"                  # Put 1 for MSR version 3
 
 # Worker Info
-aws_worker_count="3"
+aws_worker_count="0"
 aws_win_worker_count="0"
 
 #---------------------------------------------------------------------------------------------
