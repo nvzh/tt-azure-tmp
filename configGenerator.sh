@@ -1,20 +1,19 @@
 #!/bin/bash
 
 # Sourcing config
-. ./config.tfvars
+. /terraTrain/config
 
 aws_config() {
-
-if [[ $aws_os_name == "ubuntu" ]] 
+if [[ $os_name == "ubuntu" ]] 
 then
   amiUserName="ubuntu"
-elif [[ $aws_os_name == "redhat" ]] 
+elif [[ $os_name == "redhat" ]] 
 then
   amiUserName="ec2-user"
-elif [[ $aws_os_name == "centos" ]] 
+elif [[ $os_name == "centos" ]] 
 then
   amiUserName="centos"
-elif [[ $aws_os_name == "suse" ]] 
+elif [[ $os_name == "suse" ]] 
 then
   amiUserName="ec2-user"
 else
@@ -22,7 +21,7 @@ else
 fi
 
 #if [[ $msr_count != 0 && $msr_version_3 != 1 ]]
-if [ $aws_msr_count -ne 0 ] && [ $aws_msr_version_3 -ne 1 ]
+if [ $msr_count -ne 0 ] && [ $msr_version_3 -ne 1 ]
   then
     ####### Generating Launchpad Metadata Configuration
     cat > launchpad.yaml << EOL
@@ -34,12 +33,12 @@ spec:
   hosts:
 EOL
     ####### Generating Manager Node Configuration
-    if [[ $aws_manager_count != 0 ]]
+    if [[ $manager_count != 0 ]]
       then
-        for count in $(seq $aws_manager_count)
+        for count in $(seq $manager_count)
             do 
                 index=`expr $count - 1` #because index_key starts with 0
-                mgr_address=$(cat terraform.tfstate |  jq --argjson cnt "$index" -r '.resources[] | select(.name=="managerNode") | .instances[] | select(.index_key==$cnt) | .attributes.public_dns')
+                mgr_address=$(cat /terraTrain/terraform.tfstate |  jq --argjson cnt "$index" -r '.resources[] | select(.name=="managerNode") | .instances[] | select(.index_key==$cnt) | .attributes.public_dns')
                 cat >> launchpad.yaml << EOL
   - role: manager
     hooks:
@@ -52,7 +51,7 @@ EOL
       address: $mgr_address
       user: $amiUserName
       port: 22
-      keyPath: /Users/nvzh/.ssh/id_rsa
+      keyPath: /terraTrain/key-pair
     environment:
     mcrConfig:
       debug: true
@@ -64,10 +63,10 @@ EOL
     else
     ### For minimum 1 Manager 
       manager_count=1
-      for count in $(seq $aws_manager_count)
+      for count in $(seq $manager_count)
             do 
                 index=`expr $count - 1` #because index_key starts with 0
-                mgr_address=$(cat terraform.tfstate |  jq --argjson cnt "$index" -r '.resources[] | select(.name=="managerNode") | .instances[] | select(.index_key==$cnt) | .attributes.public_dns')
+                mgr_address=$(cat /terraTrain/terraform.tfstate |  jq --argjson cnt "$index" -r '.resources[] | select(.name=="managerNode") | .instances[] | select(.index_key==$cnt) | .attributes.public_dns')
                 cat >> launchpad.yaml << EOL
   - role: manager
     hooks:
@@ -80,7 +79,7 @@ EOL
       address: $mgr_address
       user: $amiUserName
       port: 22
-      keyPath: /Users/nvzh/.ssh/id_rsa
+      keyPath: /terraTrain/key-pair
     environment:
     mcrConfig:
       debug: true
@@ -92,34 +91,34 @@ EOL
     fi
 
     ####### Generating Worker Node Configuration
-    if [[ $aws_worker_count != 0 ]]
+    if [[ $worker_count != 0 ]]
         then
-            for count in $(seq $aws_worker_count)
+            for count in $(seq $worker_count)
             do 
                 index=`expr $count - 1` #because index_key starts with 0
-                wkr_address=$(cat terraform.tfstate |  jq --argjson cnt "$index" -r '.resources[] | select(.name=="workerNode") | .instances[] | select(.index_key==$cnt) | .attributes.public_dns')
+                wkr_address=$(cat /terraTrain/terraform.tfstate |  jq --argjson cnt "$index" -r '.resources[] | select(.name=="workerNode") | .instances[] | select(.index_key==$cnt) | .attributes.public_dns')
                 cat >> launchpad.yaml << EOL
   - role: worker
     ssh:
       address: $wkr_address
       user: $amiUserName
       port: 22
-      keyPath: /Users/nvzh/.ssh/id_rsa
+      keyPath: /terraTrain/key-pair
 EOL
             done
     fi
         ####### Generating Windows Worker Node Configuration
-    if [[ $aws_win_worker_count != 0 ]]
+    if [[ $win_worker_count != 0 ]]
         then
-            for count in $(seq $aws_win_worker_count)
+            for count in $(seq $win_worker_count)
             do 
                 index=`expr $count - 1` #because index_key starts with 0
-                win_worker_address=$(cat terraform.tfstate |  jq --argjson cnt "$index" -r '.resources[] | select(.name=="winNode") | .instances[] | select(.index_key==$cnt) | .attributes.public_dns')
-                mkeadminPassword=$(cat terraform.tfstate 2>/dev/null | jq -r '.resources[] | select(.name=="mke_password") | .instances[] | .attributes.id' 2>/dev/null)
+                win_worker_address=$(cat /terraTrain/terraform.tfstate |  jq --argjson cnt "$index" -r '.resources[] | select(.name=="winNode") | .instances[] | select(.index_key==$cnt) | .attributes.public_dns')
+                mkeadminPassword=$(cat /terraTrain/terraform.tfstate 2>/dev/null | jq -r '.resources[] | select(.name=="mke_password") | .instances[] | .attributes.id' 2>/dev/null)
                 cat >> launchpad.yaml << EOL
   - role: worker
     winRM:
-      address: $aws_win_worker_address
+      address: $win_worker_address
       user: Administrator
       password: $mkeadminPassword
       port: 5986
@@ -131,49 +130,49 @@ EOL
     fi
     ####### Generating MSR Node Configuration
     
-    for count in $(seq $aws_msr_count)
+    for count in $(seq $msr_count)
             do 
                 index=`expr $count - 1` #because index_key starts with 0
-                msr_address=$(cat terraform.tfstate |  jq --argjson cnt "$index" -r '.resources[] | select(.name=="msrNode") | .instances[] | select(.index_key==$cnt) | .attributes.public_dns')
+                msr_address=$(cat /terraTrain/terraform.tfstate |  jq --argjson cnt "$index" -r '.resources[] | select(.name=="msrNode") | .instances[] | select(.index_key==$cnt) | .attributes.public_dns')
                 cat >> launchpad.yaml << EOL
   - role: msr
     ssh:
       address: $msr_address
       user: $amiUserName
       port: 22
-      keyPath: /Users/nvzh/.ssh/id_rsa
+      keyPath: /terraTrain/key-pair
 EOL
     done
 
     ####### Generating MKE Configuration
-    mkeadminUsername=$(cat terraform.tfstate 2>/dev/null | jq -r '.resources[] | select(.name=="mke_username") | .instances[] | .attributes.id' 2>/dev/null)
-    mkeadminPassword=$(cat terraform.tfstate 2>/dev/null | jq -r '.resources[] | select(.name=="mke_password") | .instances[] | .attributes.id' 2>/dev/null)                
+    mkeadminUsername=$(cat /terraTrain/terraform.tfstate 2>/dev/null | jq -r '.resources[] | select(.name=="mke_username") | .instances[] | .attributes.id' 2>/dev/null)
+    mkeadminPassword=$(cat /terraTrain/terraform.tfstate 2>/dev/null | jq -r '.resources[] | select(.name=="mke_password") | .instances[] | .attributes.id' 2>/dev/null)                
     cat >> launchpad.yaml << EOL
   mke:
-    version: $aws_mke_version
+    version: $mke_version
     imageRepo: "$image_repo"
     adminUsername: $mkeadminUsername
     adminPassword: $mkeadminPassword
 EOL
 
     ####### Generating MSR Configuration
-    msr_address=$(cat terraform.tfstate |  jq -r '.resources[] | select(.name=="msrNode") | .instances[] | select(.index_key==0) | .attributes.public_dns')
-    if [[ $aws_nfs_backend == 0 ]] ; then
+    msr_address=$(cat /terraTrain/terraform.tfstate |  jq -r '.resources[] | select(.name=="msrNode") | .instances[] | select(.index_key==0) | .attributes.public_dns')
+    if [[ $nfs_backend == 0 ]] ; then
       cat >> launchpad.yaml << EOL
   msr:
-    version: $aws_msr_version
-    imageRepo: "$aws_image_repo"
+    version: $msr_version
+    imageRepo: "$image_repo"
     installFlags:
     - --dtr-external-url $msr_address
     - --ucp-insecure-tls
     replicaIDs: sequential
 EOL
     else
-      nfs_address=$(cat terraform.tfstate |  jq -r '.resources[] | select(.name=="nfsNode") | .instances[] | select(.index_key==0) | .attributes.public_dns')
+      nfs_address=$(cat /terraTrain/terraform.tfstate |  jq -r '.resources[] | select(.name=="nfsNode") | .instances[] | select(.index_key==0) | .attributes.public_dns')
       cat >> launchpad.yaml << EOL
   msr:
-    version: $aws_msr_version
-    imageRepo: "$aws_image_repo"
+    version: $msr_version
+    imageRepo: "$image_repo"
     installFlags:
     - --dtr-external-url $msr_address
     - --ucp-insecure-tls
@@ -184,7 +183,7 @@ EOL
     ####### Generating MCR Configuration
     cat >> launchpad.yaml << EOL
   mcr:
-    version: $aws_mcr_version
+    version: $mcr_version
     channel: stable
     repoURL: https://repos.mirantis.com
     installURLLinux: https://get.mirantis.com/
@@ -204,10 +203,10 @@ spec:
   hosts:
 EOL
     ####### Generating Manager Node Configuration
-    for count in $(seq $aws_manager_count)
+    for count in $(seq $manager_count)
         do 
             index=`expr $count - 1` #because index_key starts with 0
-            mgr_address=$(cat terraform.tfstate |  jq --argjson cnt "$index" -r '.resources[] | select(.name=="managerNode") | .instances[] | select(.index_key==$cnt) | .attributes.public_dns')
+            mgr_address=$(cat /terraTrain/terraform.tfstate |  jq --argjson cnt "$index" -r '.resources[] | select(.name=="managerNode") | .instances[] | select(.index_key==$cnt) | .attributes.public_dns')
             cat >> launchpad.yaml << EOL
   - role: manager
     hooks:
@@ -220,7 +219,7 @@ EOL
       address: $mgr_address
       user: $amiUserName
       port: 22
-      keyPath: /Users/nvzh/.ssh/id_rsa
+      keyPath: /terraTrain/key-pair
     environment:
     mcrConfig:
       debug: true
@@ -233,45 +232,45 @@ EOL
 
     ####### Generating Worker Node Configuration
     ### For MSRv3 nodes
-    if [[ $aws_msr_count != 0 ]] ; then
+    if [[ $msr_count != 0 ]] ; then
     for count in $(seq $msr_count)
       do 
           index=`expr $count - 1` #because index_key starts with 0
-          msr_address=$(cat terraform.tfstate |  jq --argjson cnt "$index" -r '.resources[] | select(.name=="msrNode") | .instances[] | select(.index_key==$cnt) | .attributes.public_dns')
+          msr_address=$(cat /terraTrain/terraform.tfstate |  jq --argjson cnt "$index" -r '.resources[] | select(.name=="msrNode") | .instances[] | select(.index_key==$cnt) | .attributes.public_dns')
           cat >> launchpad.yaml << EOL
   - role: worker
     ssh:
       address: $msr_address
       user: $amiUserName
       port: 22
-      keyPath: /Users/nvzh/.ssh/id_rsa
+      keyPath: /terraTrain/key-pair
 EOL
     done 
     fi
-    if [[ $aws_worker_count != 0 ]]
+    if [[ $worker_count != 0 ]]
         then
-            for count in $(seq $aws_worker_count)
+            for count in $(seq $worker_count)
             do 
                 index=`expr $count - 1` #because index_key starts with 0
-                wkr_address=$(cat terraform.tfstate |  jq --argjson cnt "$index" -r '.resources[] | select(.name=="workerNode") | .instances[] | select(.index_key==$cnt) | .attributes.public_dns')
+                wkr_address=$(cat /terraTrain/terraform.tfstate |  jq --argjson cnt "$index" -r '.resources[] | select(.name=="workerNode") | .instances[] | select(.index_key==$cnt) | .attributes.public_dns')
                 cat >> launchpad.yaml << EOL
   - role: worker
     ssh:
       address: $wkr_address
       user: $amiUserName
       port: 22
-      keyPath: /Users/nvzh/.ssh/id_rsa
+      keyPath: /terraTrain/key-pair
 EOL
             done
     fi
         ####### Generating Windows Worker Node Configuration
-    if [[ $aws_win_worker_count != 0 ]]
+    if [[ $win_worker_count != 0 ]]
         then
-            for count in $(seq $aws_win_worker_count)
+            for count in $(seq $win_worker_count)
             do 
                 index=`expr $count - 1` #because index_key starts with 0
-                win_worker_address=$(cat terraform.tfstate |  jq --argjson cnt "$index" -r '.resources[] | select(.name=="winNode") | .instances[] | select(.index_key==$cnt) | .attributes.public_dns')
-                mkeadminPassword=$(cat terraform.tfstate 2>/dev/null | jq -r '.resources[] | select(.name=="mke_password") | .instances[] | .attributes.id' 2>/dev/null)
+                win_worker_address=$(cat /terraTrain/terraform.tfstate |  jq --argjson cnt "$index" -r '.resources[] | select(.name=="winNode") | .instances[] | select(.index_key==$cnt) | .attributes.public_dns')
+                mkeadminPassword=$(cat /terraTrain/terraform.tfstate 2>/dev/null | jq -r '.resources[] | select(.name=="mke_password") | .instances[] | .attributes.id' 2>/dev/null)
                 cat >> launchpad.yaml << EOL
   - role: worker
     winRM:
@@ -286,12 +285,12 @@ EOL
             done
     fi
     ####### Generating MKE Configuration
-    mkeadminUsername=$(cat terraform.tfstate 2>/dev/null | jq -r '.resources[] | select(.name=="mke_username") | .instances[] | .attributes.id' 2>/dev/null)
-    mkeadminPassword=$(cat terraform.tfstate 2>/dev/null | jq -r '.resources[] | select(.name=="mke_password") | .instances[] | .attributes.id' 2>/dev/null)                
+    mkeadminUsername=$(cat /terraTrain/terraform.tfstate 2>/dev/null | jq -r '.resources[] | select(.name=="mke_username") | .instances[] | .attributes.id' 2>/dev/null)
+    mkeadminPassword=$(cat /terraTrain/terraform.tfstate 2>/dev/null | jq -r '.resources[] | select(.name=="mke_password") | .instances[] | .attributes.id' 2>/dev/null)                
     cat >> launchpad.yaml << EOL
   mke:
-    version: $aws_mke_version
-    imageRepo: "$aws_image_repo"
+    version: $mke_version
+    imageRepo: "$image_repo"
     adminUsername: $mkeadminUsername
     adminPassword: $mkeadminPassword
 EOL
@@ -299,7 +298,7 @@ EOL
     ####### Generating MCR Configuration
     cat >> launchpad.yaml << EOL
   mcr:
-    version: $aws_mcr_version
+    version: $mcr_version
     channel: stable
     repoURL: https://repos.mirantis.com
     installURLLinux: https://get.mirantis.com/
@@ -653,10 +652,13 @@ fi
 
 }
 
-if [[ $aws_manager_count -gt 0 && $manager_count -eq 0 ]]; then
+
+if [[ $cloud_provider == "aws" ]] 
+then
   aws_config
-elif [[ $aws_manager_count -eq 0 && $manager_count -gt 0 ]]; then
+elif [[ $cloud_provider == "azure" ]] 
+then
   azure_config
 else
-  echo "Do not use both AWS and Azure at the same time. Choose one of them."
+  echo "Wrong provider. Please edit the 'provider' value in the /terraTrain/config file"
 fi

@@ -1,14 +1,26 @@
+terraform {
+   backend "local" {
+    path = "/terraTrain/terraform.tfstate"
+  }
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 3.0"
+    }
+  }
+}
+
 # Configure the AWS Provider
 provider "aws" {
-  region = var.aws_region  
+  region = var.region  
   shared_credentials_file = var.aws_shared_credentials_file
   profile = var.aws_profile
 }
 # Creating two random password for MKE username and Password
-resource "random_pet" "aws_mke_username" {
+resource "random_pet" "mke_username" {
   length  = 2
 }
-resource "random_string" "aws_mke_password" {
+resource "random_string" "mke_password" {
   length  = 20
   special = false
 }
@@ -31,7 +43,7 @@ data "aws_subnet" "selected" {
 ######## CREATING A SECURITY GROUP #########
 
 resource "aws_security_group" "allow-all-security-group" {
-  name        = "${var.aws_name}-${random_pet.aws_mke_username.id}-SecurityGroup"
+  name        = "${var.name}-${random_pet.mke_username.id}-SecurityGroup"
   description = "Allow everything for an ephemeral cluster"
 
   ingress {
@@ -49,43 +61,43 @@ resource "aws_security_group" "allow-all-security-group" {
   }
 
   tags = {
-    Name = "${var.aws_name}-SecurityGroup"
+    Name = "${var.name}-SecurityGroup"
     DateOfCreation = local.tstmp
     resourceType = "Security Group"
-    resourceOwner = "${var.aws_name}"
-    caseNumber = "${var.aws_caseNo}"
+    resourceOwner = "${var.name}-${random_pet.mke_username.id}"
+    caseNumber = "${var.caseNo}"
   }
 }
 ####### CREATING THE KEY PAIR  #######
 resource "aws_key_pair" "deployer" {
-  key_name   = "${var.aws_name}-${random_pet.aws_mke_username.id}-keypair"
-  public_key = var.aws_publicKey
+  key_name   = "${var.name}-${random_pet.mke_username.id}-keypair"
+  public_key = var.publicKey
    tags = {
-    Name = "${var.aws_name}-KeyPair"
+    Name = "${var.name}-KeyPair"
     DateOfCreation = local.tstmp
     resourceType = "keyPair"
-    resourceOwner = "${var.aws_name}"
-    caseNumber = "${var.aws_caseNo}"
+    resourceOwner = "${var.name}-${random_pet.mke_username.id}"
+    caseNumber = "${var.caseNo}"
   }
 }
 
 ######## CREATING THE WORKER INSTANCE #######
 
 resource "aws_instance" "workerNode" {
-  count = "${var.aws_worker_count}"
-  ami = "${ var.aws_os_name == "ubuntu" ? data.aws_ami.ubuntu[0].image_id : (var.aws_os_name == "redhat" ? data.aws_ami.redhat[0].image_id : (var.aws_os_name == "centos" ? data.aws_ami.centos[0].image_id : data.aws_ami.suse[0].image_id ))}"
-  instance_type = var.aws_worker_instance_type
-  key_name = "${var.aws_name}-${random_pet.aws_mke_username.id}-keypair"
+  count = "${var.worker_count}"
+  ami = "${ var.os_name == "ubuntu" ? data.aws_ami.ubuntu[0].image_id : (var.os_name == "redhat" ? data.aws_ami.redhat[0].image_id : (var.os_name == "centos" ? data.aws_ami.centos[0].image_id : data.aws_ami.suse[0].image_id ))}"
+  instance_type = var.worker_instance_type
+  key_name = "${var.name}-${random_pet.mke_username.id}-keypair"
   associate_public_ip_address = true
   subnet_id = "${data.aws_subnet.selected.id}"
   security_groups = ["${aws_security_group.allow-all-security-group.id}"]
 #  user_data = data.template_cloudinit_config.replicas.rendered
   tags = {
-    Name = "${var.aws_name}-${random_pet.aws_mke_username.id}-workerNode-${format("%02d", count.index + 1)}"
+    Name = "${var.name}-${random_pet.mke_username.id}-workerNode-${format("%02d", count.index + 1)}"
     resourceType = "instance"
-    resourceOwner = "${var.aws_name}"
+    resourceOwner = "${var.name}-${random_pet.mke_username.id}"
     DateOfCreation = local.tstmp
-    caseNumber = "${var.aws_caseNo}"
+    caseNumber = "${var.caseNo}"
     role = "worker"
   }
 }
@@ -93,10 +105,10 @@ resource "aws_instance" "workerNode" {
 ######## CREATING THE MANAGER INSTANCE #######
 
 resource "aws_instance" "managerNode" {
-  count = "${var.aws_manager_count}"
-  ami = "${ var.aws_os_name == "ubuntu" ? data.aws_ami.ubuntu[0].image_id : (var.aws_os_name == "redhat" ? data.aws_ami.redhat[0].image_id : (var.aws_os_name == "centos" ? data.aws_ami.centos[0].image_id : data.aws_ami.suse[0].image_id ))}"
-  instance_type = var.aws_manager_instance_type
-  key_name = "${var.aws_name}-${random_pet.aws_mke_username.id}-keypair"
+  count = "${var.manager_count}"
+  ami = "${ var.os_name == "ubuntu" ? data.aws_ami.ubuntu[0].image_id : (var.os_name == "redhat" ? data.aws_ami.redhat[0].image_id : (var.os_name == "centos" ? data.aws_ami.centos[0].image_id : data.aws_ami.suse[0].image_id ))}"
+  instance_type = var.manager_instance_type
+  key_name = "${var.name}-${random_pet.mke_username.id}-keypair"
   associate_public_ip_address = true
   subnet_id = "${data.aws_subnet.selected.id}"
   security_groups = ["${aws_security_group.allow-all-security-group.id}"]
@@ -106,10 +118,10 @@ resource "aws_instance" "managerNode" {
     delete_on_termination = "true"
   }
   tags = {
-    Name = "${var.aws_name}-${random_pet.aws_mke_username.id}-managerNode-${format("%02d", count.index + 1)}"
+    Name = "${var.name}-${random_pet.mke_username.id}-managerNode-${format("%02d", count.index + 1)}"
     resourceType = "instance"
-    resourceOwner = "${var.aws_name}"
-    caseNumber = "${var.aws_caseNo}"
+    resourceOwner = "${var.name}-${random_pet.mke_username.id}"
+    caseNumber = "${var.caseNo}"
     DateOfCreation = local.tstmp
     role = "manager"
   }
@@ -117,10 +129,10 @@ resource "aws_instance" "managerNode" {
 ######## CREATING THE MSR INSTANCE #######
 
 resource "aws_instance" "msrNode" {
-  count = "${var.aws_msr_count}"
-  ami = "${ var.aws_os_name == "ubuntu" ? data.aws_ami.ubuntu[0].image_id : (var.aws_os_name == "redhat" ? data.aws_ami.redhat[0].image_id : (var.aws_os_name == "centos" ? data.aws_ami.centos[0].image_id : data.aws_ami.suse[0].image_id ))}"
-  instance_type = var.aws_msr_instance_type
-  key_name = "${var.aws_name}-${random_pet.aws_mke_username.id}-keypair"
+  count = "${var.msr_count}"
+  ami = "${ var.os_name == "ubuntu" ? data.aws_ami.ubuntu[0].image_id : (var.os_name == "redhat" ? data.aws_ami.redhat[0].image_id : (var.os_name == "centos" ? data.aws_ami.centos[0].image_id : data.aws_ami.suse[0].image_id ))}"
+  instance_type = var.msr_instance_type
+  key_name = "${var.name}-${random_pet.mke_username.id}-keypair"
   associate_public_ip_address = true
   subnet_id = "${data.aws_subnet.selected.id}"
   security_groups = ["${aws_security_group.allow-all-security-group.id}"]
@@ -134,10 +146,10 @@ resource "aws_instance" "msrNode" {
 yum install -y nfs-utils || apt install -y nfs-common || zypper -n in nfs-client -y
 EOF
   tags = {
-    Name = "${var.aws_name}-${random_pet.aws_mke_username.id}-msrNode-${format("%02d", count.index + 1)}"
+    Name = "${var.name}-${random_pet.mke_username.id}-msrNode-${format("%02d", count.index + 1)}"
     resourceType = "instance"
-    resourceOwner = "${var.aws_name}"
-    caseNumber = "${var.aws_caseNo}"
+    resourceOwner = "${var.name}-${random_pet.mke_username.id}"
+    caseNumber = "${var.caseNo}"
     DateOfCreation = local.tstmp
     counter = "${format("%2d", count.index + 1)}"
     role = "msr"
@@ -145,8 +157,8 @@ EOF
   }
 }
 resource "aws_instance" "winNode" {
-  count = var.aws_win_worker_count
-  instance_type                 = var.aws_win_worker_instance_type # var.msr_instance_type
+  count = var.win_worker_count
+  instance_type                 = var.win_worker_instance_type # var.msr_instance_type
   ami                           = data.aws_ami.windows[0].image_id
   associate_public_ip_address   = true
   subnet_id                     = "${data.aws_subnet.selected.id}"
@@ -154,7 +166,7 @@ resource "aws_instance" "winNode" {
   user_data              = <<EOF
 <powershell>
 $admin = [adsi]("WinNT://./administrator, user")
-$admin.psbase.invoke("SetPassword", "${random_string.aws_mke_password.result}")
+$admin.psbase.invoke("SetPassword", "${random_string.mke_password.result}")
 # Snippet to enable WinRM over HTTPS with a self-signed certificate
 # from https://gist.github.com/TechIsCool/d65017b8427cfa49d579a6d7b6e03c93
 Write-Output "Disabling WinRM over HTTP..."
@@ -210,27 +222,27 @@ EOF
   connection {
     type = "winrm"
     user = "Administrator"
-    password = random_string.aws_mke_password.result
+    password = random_string.mke_password.result
     timeout = "10m"
     https = "true"
     insecure = "true"
     port=5986
   }
   tags = {
-    Name = "${var.aws_name}-${random_pet.aws_mke_username.id}-winNode-${format("%02d", count.index + 1)}"
+    Name = "${var.name}-${random_pet.mke_username.id}-winNode-${format("%02d", count.index + 1)}"
     resourceType = "instance"
-    resourceOwner = "${var.aws_name}"
-    caseNumber = "${var.aws_caseNo}"
+    resourceOwner = "${var.name}-${random_pet.mke_username.id}"
+    caseNumber = "${var.caseNo}"
     counter = "${format("%2d", count.index + 1)}"
     role = "win-worker"
     DateOfCreation = local.tstmp
   }
 }
 resource "aws_instance" "nfsNode" {
-  count = "${var.aws_nfs_backend}"
+  count = "${var.nfs_backend}"
   ami = data.aws_ami.nfsNodeImage[0].image_id 
   instance_type = "t2.nano"
-  key_name = "${var.aws_name}-${random_pet.aws_mke_username.id}-keypair"
+  key_name = "${var.name}-${random_pet.mke_username.id}-keypair"
   associate_public_ip_address = true
   subnet_id = "${data.aws_subnet.selected.id}"
   security_groups = ["${aws_security_group.allow-all-security-group.id}"]
@@ -246,10 +258,10 @@ echo '/var/nfs/general    *(rw,sync,no_root_squash,no_subtree_check)' > /etc/exp
 systemctl restart nfs-kernel-server
 EOF
   tags = {
-    Name = "${var.aws_name}-${random_pet.aws_mke_username.id}-nfsNode-${format("%02d", count.index + 1)}"
+    Name = "${var.name}-${random_pet.mke_username.id}-nfsNode-${format("%02d", count.index + 1)}"
     resourceType = "instance"
-    resourceOwner = "${var.aws_name}"
-    caseNumber = "${var.aws_caseNo}"
+    resourceOwner = "${var.name}-${random_pet.mke_username.id}"
+    caseNumber = "${var.caseNo}"
     role = "nfs"
     DateOfCreation = local.tstmp
   }
@@ -257,11 +269,11 @@ EOF
 ######### AMI SEARCH #########
 data "aws_ami" "ubuntu" {
     owners = ["099720109477"]
-    count  = "${ var.aws_os_name == "ubuntu" ? 1 : 0}"
+    count  = "${ var.os_name == "ubuntu" ? 1 : 0}"
     most_recent = true
     filter {
         name = "name"
-        values = ["ubuntu/images/hvm-ssd/ubuntu-*-${var.aws_os_version}*amd64*"]
+        values = ["ubuntu/images/hvm-ssd/ubuntu-*-${var.os_version}*amd64*"]
     }
     filter {
         name = "architecture"
@@ -274,13 +286,13 @@ data "aws_ami" "ubuntu" {
     }
 }
 data "aws_ami" "redhat" {
-    count  = "${ var.aws_os_name == "redhat" ? 1 : 0}"
+    count  = "${ var.os_name == "redhat" ? 1 : 0}"
     owners = ["309956199498"]
     most_recent = true
 
     filter {
         name = "name"
-        values = ["RHEL-${var.aws_os_version}*-x86_64*"]
+        values = ["RHEL-${var.os_version}*-x86_64*"]
    }
    filter {
         name = "architecture"
@@ -293,12 +305,12 @@ data "aws_ami" "redhat" {
     }
 }
 data "aws_ami" "centos" {
-    count  = "${var.aws_os_name == "centos" ? 1 : 0}"
+    count  = "${var.os_name == "centos" ? 1 : 0}"
     owners = ["125523088429"]
     most_recent = true
     filter {
         name = "name"
-        values = ["CentOS*${var.aws_os_version}*x86_64"]
+        values = ["CentOS*${var.os_version}*x86_64"]
     }
     filter {
         name = "architecture"
@@ -311,12 +323,12 @@ data "aws_ami" "centos" {
     }
 }
 data "aws_ami" "suse" {
-    count  = "${var.aws_os_name == "suse" ? 1 : 0}"
+    count  = "${var.os_name == "suse" ? 1 : 0}"
     owners = ["amazon"]
     most_recent = true
     filter {
         name = "name"
-        values = ["suse-sles-${var.aws_os_version}-sp*-v????????-hvm-ssd-x86_64"]
+        values = ["suse-sles-${var.os_version}-sp*-v????????-hvm-ssd-x86_64"]
     }
     #filter {
     #    name = "virtualization_type"
@@ -334,7 +346,7 @@ data "aws_ami" "suse" {
 }    
 data "aws_ami" "windows" {
     owners = ["801119661308"]
-    count  = "${var.aws_win_worker_count == 0 ? 0 : 1}"
+    count  = "${var.win_worker_count == 0 ? 0 : 1}"
     most_recent = true
     filter {
         name = "name"
@@ -347,7 +359,7 @@ data "aws_ami" "windows" {
 }
 data "aws_ami" "nfsNodeImage" {
     owners = ["099720109477"]
-    count  = var.aws_nfs_backend
+    count  = var.nfs_backend
     most_recent = true
     filter {
         name = "name"
