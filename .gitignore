@@ -10,4 +10,4 @@ configGenerator.sh.bkp
 launchpad.yaml
 t.sh
 bin/t-commandline copy.bash
-./bin
+bin/t-commandline-new.bash
