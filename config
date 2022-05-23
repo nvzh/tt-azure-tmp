@@ -7,10 +7,22 @@ region="germanywestcentral"              # AWS region : eu-central-1, ap-southea
 caseNo="12345678"                    # optional tag to identify resources
 
 # Platform Info
-# azure: UbuntuServer
-os_name="UbuntuServer"                   # use "ubuntu" or  "redhat" or "centos"
-# azure: 18.04-LTS
-os_version="18.04-LTS"                 # for ubuntu 16.04,18.04 ... For redhat 7.8, 7.1, 8.1 ...
+#|-------------------------------------------------------------------------------------------|
+#| cloud_provider | os_name                      | os_version                                |
+#|-------------------------------------------------------------------------------------------|
+#| aws            | ubuntu                       | 20.04, 18.04                              |
+#|                | redhat                       | 8.4, 8.3, 8.2, 8.1, 7.9                   |
+#|                | centos                       | 7.9, 7.8                                  |
+#|                | suse(?)                      | 15SP3, 15SP2, 15SP1, 12SP5 (?)            |
+#|-------------------------------------------------------------------------------------------|
+#| azure          | UbuntuServer                 | 18.04-LTS                                 |
+#|                | 0001-com-ubuntu-server-focal | 20_04-lts-gen2                            |
+#|                | RHEL                         | 79-gen2, 81gen2, 82gen2, 83-gen2, 84-gen2 |
+#|                | CentOS                       | 7_8-gen2, 7_9-gen2                        |
+#|-------------------------------------------------------------------------------------------|
+os_name="UbuntuServer"                   
+os_version="18.04-LTS"
+
 mcr_version="20.10.7"              # Please use specific minor engine version.
 
 # MKE Info
