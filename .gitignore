@@ -9,3 +9,5 @@ misc.txt
 configGenerator.sh.bkp
 launchpad.yaml
 t.sh
+bin/t-commandline.bash
+bin/t-commandline copy.bash

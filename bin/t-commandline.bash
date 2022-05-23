@@ -229,16 +229,17 @@ t-deploy-lab() {
 			echo "Login unsuccessfull"
 			exit 1
 		fi
-		subscriptionID=$(cat .azure.accounts | jq '.[0]| .id' -r)
-		az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/$subscriptionID" > .azure.secrets
-		if [ $? -ne 0 ] 
-		then 
-			echo "Azure Service Creation failed"
-			exit 1
-		fi
-		tenantID=$(cat .azure.secrets | jq .tenant -r)
-		clientID=$(cat .azure.secrets | jq .appId -r)
-		clientSecret=$(cat .azure.secrets | jq .password -r)
+		#subscriptionID=$(cat .azure.accounts | jq '.[0]| .id' -r)
+		subscriptionID=d8cf16d8-db67-4e89-bcbe-d6316fce6378
+		# az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/$subscriptionID" > .azure.secrets
+		# if [ $? -ne 0 ] 
+		# then 
+		# 	echo "Azure Service Creation failed"
+		# 	exit 1
+		# fi
+		tenantID=6d498697-2abe-46df-ae3e-4e5b2e25f280
+		clientID=45e28ca0-fbf3-4d4d-b46c-396d657c1398
+		clientSecret=ydfHR_E0AMGEYjr6-0-bxay-yXeSEIpbnI
 		cd /terraTrain/modules/azure
 		terraform init -input=false
 		terraform apply -var="client_id=${clientID}" -var="subscription_id=${subscriptionID}" -var="tenant_id=${tenantID}" -var="client_secret=${clientSecret}" -var-file=/terraTrain/config -auto-approve || return 1
@@ -359,10 +360,10 @@ t-destroy-lab() {
 	######## Provider Seperation Mechanism ########
 	if [[ $(awk -F= -v key="cloud_provider" '$1==key {print $2}' /terraTrain/config  | tr -d '"' | cut -d' ' -f1 | tr -d "\n") == "azure" ]] 
 	then
-		subscriptionID=$(cat /terraTrain/.azure.accounts | jq '.[0]| .id' -r)
-		tenantID=$(cat /terraTrain/.azure.secrets | jq .tenant -r)
-		clientID=$(cat /terraTrain/.azure.secrets | jq .appId -r)
-		clientSecret=$(cat /terraTrain/.azure.secrets | jq .password -r)
+        subscriptionID=d8cf16d8-db67-4e89-bcbe-d6316fce6378
+		tenantID=6d498697-2abe-46df-ae3e-4e5b2e25f280
+		clientID=45e28ca0-fbf3-4d4d-b46c-396d657c1398
+		clientSecret=ydfHR_E0AMGEYjr6-0-bxay-yXeSEIpbnI
 		cd /terraTrain/modules/azure
 		printf "\nten: $tenantID\ncid: $clientID\nCpass: $clientSecret\nsubID: $subscriptionID\n"
 		terraform destroy -var="client_id=${clientID}" -var="subscription_id=${subscriptionID}" -var="tenant_id=${tenantID}" -var="client_secret=${clientSecret}" -var-file=/terraTrain/config -auto-approve || return 1

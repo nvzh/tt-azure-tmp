@@ -1,3 +1,5 @@
+name="onovozhylov"
+
 # Cloud Provide Info
 cloud_provider="azure"
 # azure: germanywestcentral
