@@ -45,7 +45,7 @@ RUN cp /terraTrain/bin/kubectl /usr/local/bin/kubectl && \
     # Demove "new" when project is ready
     cp /terraTrain/bin/t-commandline-new.bash /bin/t && \
     cp /terraTrain/bin/auger /bin/auger &&\
-    cp /terraTrain/bin/t-commandline.bash /bin/terraTrain 
+    cp /terraTrain/bin/t-commandline-new.bash /bin/terraTrain 
     
 # Some housekeeping
 RUN ssh-keygen -t rsa -b 4096 -f /terraTrain/key-pair -P "" && \

@@ -491,7 +491,11 @@ EOL
     replicaIDs: sequential
 EOL
     else
-      nfs_address=$(cat ./terraform.tfstate |  jq -r '.resources[] | select(.name=="nfsVM") | .instances[] | select(.index_key==0) | .attributes.public_dns')
+      nfs_address=$(az vm list-ip-addresses \
+                --resource-group "$RG" \
+                --name "$name"-case"$caseNo"-nfsvm  \
+                --query "[].virtualMachine.network.publicIpAddresses[0].ipAddress" \
+                --output tsv)
       cat >> launchpad.yaml << EOL
   msr:
     version: $msr_version
@@ -653,11 +657,9 @@ fi
 }
 
 
-if [[ $cloud_provider == "aws" ]] 
-then
+if [[ "$cloud_provider" == "aws" ]]; then
   aws_config
-elif [[ $cloud_provider == "azure" ]] 
-then
+elif [[ "$cloud_provider" == "azure" ]]; then
   azure_config
 else
   echo "Wrong provider. Please edit the 'provider' value in the /terraTrain/config file"

@@ -63,10 +63,9 @@ resource "azurerm_virtual_machine" "emea-cso-msr-vm" {
     computer_name  = "emea-cso-msrvm-${count.index}"
     admin_username = "azureuser"
     custom_data    = <<-EOF
-#cloud-config
-bootcmd:
- - >
-   sudo systemctl stop firewalld && sudo systemctl disable firewalld
+#!/bin/bash
+sudo systemctl stop firewalld && sudo systemctl disable firewalld
+yum install -y nfs-utils || apt install -y nfs-common || zypper -n in nfs-client -y
 EOF
   }
   os_profile_linux_config {
