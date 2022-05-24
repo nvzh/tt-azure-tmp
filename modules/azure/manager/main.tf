@@ -32,6 +32,9 @@ resource "azurerm_virtual_machine" "emea-cso-manager-vm" {
   network_interface_ids = [element(azurerm_network_interface.emea-cso-manager-interface.*.id, count.index)]
   vm_size               = var.manager_instance_type
 
+  ### Uncomment that line if you're going to use LB
+  #availability_set_id = azurerm_availability_set.emea_cso_manager_avset.id
+
   # this is a demo instance, so we can delete all data on termination
   delete_os_disk_on_termination    = true
   delete_data_disks_on_termination = true
