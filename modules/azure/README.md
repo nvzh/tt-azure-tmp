@@ -19,12 +19,9 @@ az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/d8cf16d8-
 
 ### To Do
 - Add MSR 3.0.x 
-- Change outdated "azurerm_virtual_machine" resource to "azurerm_linux(windows)_virtual_machine"
-- Get rid of "--force-minimums" flag in MKE config
 - Load Balancer doesn't route requests
 - Add tags
 - Add 50G disk to NSF node
-- Re-write variable names 
-- Update 'config' file
+- Adjust "t" script to work with Azure 
 
 ### Known Issues
