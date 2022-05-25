@@ -1,4 +1,4 @@
-resource "azurerm_public_ip" "emea-cso-win-pub-ip" {
+resource "azurerm_public_ip" "cso_win_pub_ip" {
   name                = "${var.name}-case${var.caseNo}-win-instance-public-ip-${count.index}"
   count               = var.win_worker_count
   location            = var.location
@@ -6,43 +6,40 @@ resource "azurerm_public_ip" "emea-cso-win-pub-ip" {
   allocation_method   = "Dynamic"
 }
 
-resource "azurerm_network_interface" "emea-cso-win-interface" {
+resource "azurerm_network_interface" "cso_win_interface" {
   name                = "${var.name}-case${var.caseNo}-win-net-interface-${count.index}"
   count               = var.win_worker_count
   location            = var.location
   resource_group_name = var.rg
 
   ip_configuration {
-    name                          = "emea-cso-ip-configuration"
+    name                          = "cso-ip-configuration"
     subnet_id                     = var.subnet_id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = element(azurerm_public_ip.emea-cso-win-pub-ip.*.id, count.index)
+    public_ip_address_id          = element(azurerm_public_ip.cso_win_pub_ip.*.id, count.index)
   }
 }
 
-resource "azurerm_network_interface_security_group_association" "emea-cso-win-allow-ssh" {
-  count                     = length(azurerm_network_interface.emea-cso-win-interface)
-  network_interface_id      = azurerm_network_interface.emea-cso-win-interface[count.index].id
+resource "azurerm_network_interface_security_group_association" "cso_win_allow_ssh" {
+  count                     = length(azurerm_network_interface.cso_win_interface)
+  network_interface_id      = azurerm_network_interface.cso_win_interface[count.index].id
   network_security_group_id = var.security_group_id
 }
 
-########################
-########################
-########################
+### WINDOWS INSTANCE ###
 
-#resource "azurerm_windows_virtual_machine" "emea-cso-win-vm" {
-resource "azurerm_virtual_machine" "emea-cso-win-vm" {
-    depends_on = [azurerm_network_interface_security_group_association.emea-cso-win-allow-ssh]
+resource "azurerm_virtual_machine" "cso_win_vm" {
+    depends_on = [azurerm_network_interface_security_group_association.cso_win_allow_ssh]
 
-    name                  = "${var.name}-case${var.caseNo}-winvm-${count.index}"
+    name                  = "${var.name}-case${var.caseNo}-win-${count.index}"
     count                 = var.win_worker_count
     location              = var.location
     resource_group_name   = var.rg
-    network_interface_ids = [element(azurerm_network_interface.emea-cso-win-interface.*.id, count.index)]
+    network_interface_ids = [element(azurerm_network_interface.cso_win_interface.*.id, count.index)]
     vm_size               = "Standard_D4s_v3"
 
     storage_os_disk {
-    name              = "emea-cso-win-osdisk-${count.index}"
+    name              = "cso-win-osdisk-${count.index}"
     create_option     = "FromImage"
     caching           = "None"
     managed_disk_type = "Premium_LRS"
@@ -56,7 +53,6 @@ resource "azurerm_virtual_machine" "emea-cso-win-vm" {
     }
 
   os_profile {
-    # computer_name  = format("%s%03d", "win-worker-", (count.index + 1))
     computer_name  = "win-vm-${count.index}"
     admin_username = "azureuser"
     admin_password = var.password
@@ -114,7 +110,7 @@ EOF
 resource "azurerm_virtual_machine_extension" "startup" {
   count                = var.win_worker_count
   name                 = format("%s%03d", "win-worker-", (count.index + 1))
-  virtual_machine_id   = element(azurerm_virtual_machine.emea-cso-win-vm.*.id, count.index)
+  virtual_machine_id   = element(azurerm_virtual_machine.cso_win_vm.*.id, count.index)
   publisher            = "Microsoft.Compute"
   type                 = "CustomScriptExtension"
   type_handler_version = "1.8"

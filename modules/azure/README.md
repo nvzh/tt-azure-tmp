@@ -25,7 +25,6 @@ az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/d8cf16d8-
 - Add tags
 - Add 50G disk to NSF node
 - Re-write variable names 
+- Update 'config' file
 
 ### Known Issues
-- Windows VM fails to spin up if cluster has MSR worker (Azure module)
-- WinRM without IP in launchpad.yaml (AWS module)

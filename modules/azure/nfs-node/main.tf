@@ -1,8 +1,4 @@
-# ########################
-# ### NFS INSTANCE ###
-# ########################
-
-resource "azurerm_public_ip" "emea-cso-nfs-pub-ip" {
+resource "azurerm_public_ip" "cso_nfs_pub_ip" {
   name                = "${var.name}-case${var.caseNo}-nfs-instance-public-ip"
   count               = var.nfs_backend
   location            = var.location
@@ -10,38 +6,36 @@ resource "azurerm_public_ip" "emea-cso-nfs-pub-ip" {
   allocation_method   = "Static"
 }
 
-resource "azurerm_network_interface" "emea-cso-nfs-interface" {
+resource "azurerm_network_interface" "cso_nfs_interface" {
   name                = "${var.name}-case${var.caseNo}-nfs-net-interface"
   count               = var.nfs_backend
   location            = var.location
   resource_group_name = var.rg
 
   ip_configuration {
-    name                          = "emea-cso-ip-configuration"
+    name                          = "cso-ip-configuration"
     subnet_id                     = var.subnet_id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = element(azurerm_public_ip.emea-cso-nfs-pub-ip.*.id, count.index)
+    public_ip_address_id          = element(azurerm_public_ip.cso_nfs_pub_ip.*.id, count.index)
   }
 }
 
-resource "azurerm_network_interface_security_group_association" "emea-cso-nfs-allow-ssh" {
-  count                     = length(azurerm_network_interface.emea-cso-nfs-interface)
-  network_interface_id      = azurerm_network_interface.emea-cso-nfs-interface[count.index].id
+resource "azurerm_network_interface_security_group_association" "cso_nfs_allow_ssh" {
+  count                     = length(azurerm_network_interface.cso_nfs_interface)
+  network_interface_id      = azurerm_network_interface.cso_nfs_interface[count.index].id
   network_security_group_id = var.security_group_id
 }
 
-########################
-########################
-########################
+### NFS INSTANCE ###
 
-resource "azurerm_virtual_machine" "emea-cso-nfs-vm" {
-  depends_on = [azurerm_network_interface_security_group_association.emea-cso-nfs-allow-ssh]
+resource "azurerm_virtual_machine" "cso_nfs_vm" {
+  depends_on = [azurerm_network_interface_security_group_association.cso_nfs_allow_ssh]
 
-  name                  = "${var.name}-case${var.caseNo}-nfsvm"
+  name                  = "${var.name}-case${var.caseNo}-nfs"
   count                 = var.nfs_backend
   location              = var.location
   resource_group_name   = var.rg
-  network_interface_ids = [element(azurerm_network_interface.emea-cso-nfs-interface.*.id, count.index)]
+  network_interface_ids = [element(azurerm_network_interface.cso_nfs_interface.*.id, count.index)]
   vm_size               = "Standard_D2s_v3"
 
   # this is a demo instance, so we can delete all data on termination
@@ -55,13 +49,13 @@ resource "azurerm_virtual_machine" "emea-cso-nfs-vm" {
     version   = "latest"
   }
   storage_os_disk {
-    name              = "emea-cso-nfs-osdisk"
+    name              = "cso-nfs-osdisk"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
   }
   os_profile {
-    computer_name  = "emea-cso-nfsvm"
+    computer_name  = "cso-nfs"
     admin_username = "azureuser"
     custom_data    = <<-EOF
 #!/bin/bash

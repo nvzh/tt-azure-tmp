@@ -1,9 +1,12 @@
 name="onovozhylov"
 
-# Cloud Provide Info
+# Cloud Provide Info (aws or azure):
 cloud_provider="azure"
-# azure: germanywestcentral
-region="germanywestcentral"              # AWS region : eu-central-1, ap-southeast-1, us-east-1 etc
+
+# Region:
+# azure: germanywestcentral, uksouth, etc.
+# aws: eu-central-1, ap-southeast-1, us-east-1, etc.
+region="germanywestcentral"             
 caseNo="12345678"                    # optional tag to identify resources
 
 # Platform Info
