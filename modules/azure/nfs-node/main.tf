@@ -4,15 +4,15 @@
 
 resource "azurerm_public_ip" "emea-cso-nfs-pub-ip" {
   name                = "${var.name}-case${var.caseNo}-nfs-instance-public-ip"
-  #count               = var.worker_count
+  count               = var.nfs_backend
   location            = var.location
   resource_group_name = var.rg
   allocation_method   = "Static"
 }
 
 resource "azurerm_network_interface" "emea-cso-nfs-interface" {
-  name                = "${var.name}-case${var.caseNo}-worker-net-interface"
-  #count               = var.worker_count
+  name                = "${var.name}-case${var.caseNo}-nfs-net-interface"
+  count               = var.nfs_backend
   location            = var.location
   resource_group_name = var.rg
 
@@ -20,13 +20,13 @@ resource "azurerm_network_interface" "emea-cso-nfs-interface" {
     name                          = "emea-cso-ip-configuration"
     subnet_id                     = var.subnet_id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.emea-cso-nfs-pub-ip.id
+    public_ip_address_id          = element(azurerm_public_ip.emea-cso-nfs-pub-ip.*.id, count.index)
   }
 }
 
 resource "azurerm_network_interface_security_group_association" "emea-cso-nfs-allow-ssh" {
-  #count                     = length(azurerm_network_interface.emea-cso-worker-interface)
-  network_interface_id      = azurerm_network_interface.emea-cso-nfs-interface.id
+  count                     = length(azurerm_network_interface.emea-cso-nfs-interface)
+  network_interface_id      = azurerm_network_interface.emea-cso-nfs-interface[count.index].id
   network_security_group_id = var.security_group_id
 }
 
