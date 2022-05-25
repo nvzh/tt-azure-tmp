@@ -7,7 +7,7 @@ resource "azurerm_public_ip" "emea-cso-win-pub-ip" {
 }
 
 resource "azurerm_network_interface" "emea-cso-win-interface" {
-  name                = "${var.name}-case${var.caseNo}-msr-net-interface-${count.index}"
+  name                = "${var.name}-case${var.caseNo}-win-net-interface-${count.index}"
   count               = var.win_worker_count
   location            = var.location
   resource_group_name = var.rg

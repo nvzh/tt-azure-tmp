@@ -5,6 +5,9 @@ resource "random_pet" "mke_username" {
 
 resource "random_string" "mke_password" {
   length  = 20
+  min_upper = 5
+  min_lower = 5
+  min_numeric = 5
   special = false
 }
 

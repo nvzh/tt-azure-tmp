@@ -31,7 +31,7 @@ resource "azurerm_network_interface_security_group_association" "emea-cso-msr-al
 ########################
 
 resource "azurerm_virtual_machine" "emea-cso-msr-vm" {
-    depends_on = [azurerm_network_interface_security_group_association.emea-cso-msr-allow-ssh]
+  depends_on = [azurerm_network_interface_security_group_association.emea-cso-msr-allow-ssh]
 
   name                  = "${var.name}-case${var.caseNo}-msrvm-${count.index}"
   count                 = var.msr_count
