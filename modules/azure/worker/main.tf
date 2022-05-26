@@ -1,5 +1,5 @@
 resource "azurerm_public_ip" "cso_worker_pub_ip" {
-  name                = "${var.name}-case${var.caseNu}-worker-instance-public-ip-${count.index}"
+  name                = "${var.name}-case${var.caseNo}-worker-instance-public-ip-${count.index}"
   count               = var.worker_count
   location            = var.location
   resource_group_name = var.rg
@@ -8,13 +8,13 @@ resource "azurerm_public_ip" "cso_worker_pub_ip" {
   tags = {
     Name          = format("%s-worker-pubip-%s", var.name, count.index + 1)
     resourceOwner = "${var.name}"
-    caseNumber    = "${var.caseNu}"
+    caseNumber    = "${var.caseNo}"
     resourceType  = "publicIP"
   }
 }
 
 resource "azurerm_network_interface" "cso_worker_interface" {
-  name                = "${var.name}-case${var.caseNu}-worker-net-interface-${count.index}"
+  name                = "${var.name}-case${var.caseNo}-worker-net-interface-${count.index}"
   count               = var.worker_count
   location            = var.location
   resource_group_name = var.rg
@@ -29,7 +29,7 @@ resource "azurerm_network_interface" "cso_worker_interface" {
   tags = {
     Name          = format("%s-worker-int-%s", var.name, count.index + 1)
     resourceOwner = "${var.name}"
-    caseNumber    = "${var.caseNu}"
+    caseNumber    = "${var.caseNo}"
     resourceType  = "networkInterface"
   }
 }
@@ -45,7 +45,7 @@ resource "azurerm_network_interface_security_group_association" "cso_worker_allo
 resource "azurerm_virtual_machine" "cso_worker_vm" {
   depends_on = [azurerm_network_interface_security_group_association.cso_worker_allow_ssh]
 
-  name                  = "${var.name}-case${var.caseNu}-worker-${count.index}"
+  name                  = "${var.name}-case${var.caseNo}-worker-${count.index}"
   count                 = var.worker_count
   location              = var.location
   resource_group_name   = var.rg
@@ -92,7 +92,7 @@ EOF
   tags = {
     Name          = format("%s-worker-vm-%s", var.name, count.index + 1)
     resourceOwner = "${var.name}"
-    caseNumber    = "${var.caseNu}"
+    caseNumber    = "${var.caseNo}"
     resourceType  = "instance"
     role          = "worker"
   }

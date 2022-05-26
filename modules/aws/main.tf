@@ -65,7 +65,7 @@ resource "aws_security_group" "allow-all-security-group" {
     DateOfCreation = local.tstmp
     resourceType = "Security Group"
     resourceOwner = "${var.name}-${random_pet.mke_username.id}"
-    caseNumber = "${var.caseNu}"
+    caseNumber = "${var.caseNo}"
   }
 }
 ####### CREATING THE KEY PAIR  #######
@@ -77,7 +77,7 @@ resource "aws_key_pair" "deployer" {
     DateOfCreation = local.tstmp
     resourceType = "keyPair"
     resourceOwner = "${var.name}-${random_pet.mke_username.id}"
-    caseNumber = "${var.caseNu}"
+    caseNumber = "${var.caseNo}"
   }
 }
 
@@ -97,7 +97,7 @@ resource "aws_instance" "workerNode" {
     resourceType = "instance"
     resourceOwner = "${var.name}-${random_pet.mke_username.id}"
     DateOfCreation = local.tstmp
-    caseNumber = "${var.caseNu}"
+    caseNumber = "${var.caseNo}"
     role = "worker"
   }
 }
@@ -121,7 +121,7 @@ resource "aws_instance" "managerNode" {
     Name = "${var.name}-${random_pet.mke_username.id}-managerNode-${format("%02d", count.index + 1)}"
     resourceType = "instance"
     resourceOwner = "${var.name}-${random_pet.mke_username.id}"
-    caseNumber = "${var.caseNu}"
+    caseNumber = "${var.caseNo}"
     DateOfCreation = local.tstmp
     role = "manager"
   }
@@ -149,7 +149,7 @@ EOF
     Name = "${var.name}-${random_pet.mke_username.id}-msrNode-${format("%02d", count.index + 1)}"
     resourceType = "instance"
     resourceOwner = "${var.name}-${random_pet.mke_username.id}"
-    caseNumber = "${var.caseNu}"
+    caseNumber = "${var.caseNo}"
     DateOfCreation = local.tstmp
     counter = "${format("%2d", count.index + 1)}"
     role = "msr"
@@ -232,7 +232,7 @@ EOF
     Name = "${var.name}-${random_pet.mke_username.id}-winNode-${format("%02d", count.index + 1)}"
     resourceType = "instance"
     resourceOwner = "${var.name}-${random_pet.mke_username.id}"
-    caseNumber = "${var.caseNu}"
+    caseNumber = "${var.caseNo}"
     counter = "${format("%2d", count.index + 1)}"
     role = "win-worker"
     DateOfCreation = local.tstmp
@@ -261,7 +261,7 @@ EOF
     Name = "${var.name}-${random_pet.mke_username.id}-nfsNode-${format("%02d", count.index + 1)}"
     resourceType = "instance"
     resourceOwner = "${var.name}-${random_pet.mke_username.id}"
-    caseNumber = "${var.caseNu}"
+    caseNumber = "${var.caseNo}"
     role = "nfs"
     DateOfCreation = local.tstmp
   }

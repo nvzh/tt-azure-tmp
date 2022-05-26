@@ -1,6 +1,6 @@
 variable "name" {}
 
-variable "caseNu" {}
+variable "caseNo" {}
 
 variable "worker_count" {}
 
