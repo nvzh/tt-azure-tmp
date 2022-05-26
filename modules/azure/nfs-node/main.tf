@@ -1,5 +1,5 @@
 resource "azurerm_public_ip" "cso_nfs_pub_ip" {
-  name                = "${var.name}-case${var.caseNo}-nfs-instance-public-ip"
+  name                = "${var.name}-case${var.caseNu}-nfs-instance-public-ip"
   count               = var.nfs_backend
   location            = var.location
   resource_group_name = var.rg
@@ -8,13 +8,13 @@ resource "azurerm_public_ip" "cso_nfs_pub_ip" {
   tags = {
     Name          = format("%s-nfs-pubip-%s", var.name, count.index + 1)
     resourceOwner = "${var.name}"
-    caseNumber    = "${var.caseNo}"
+    caseNumber    = "${var.caseNu}"
     resourceType  = "publicIP"
   }
 }
 
 resource "azurerm_network_interface" "cso_nfs_interface" {
-  name                = "${var.name}-case${var.caseNo}-nfs-net-interface"
+  name                = "${var.name}-case${var.caseNu}-nfs-net-interface"
   count               = var.nfs_backend
   location            = var.location
   resource_group_name = var.rg
@@ -29,7 +29,7 @@ resource "azurerm_network_interface" "cso_nfs_interface" {
   tags = {
     Name          = format("%s-nfs-int-%s", var.name, count.index + 1)
     resourceOwner = "${var.name}"
-    caseNumber    = "${var.caseNo}"
+    caseNumber    = "${var.caseNu}"
     resourceType  = "networkInterface"
   }
 }
@@ -45,7 +45,7 @@ resource "azurerm_network_interface_security_group_association" "cso_nfs_allow_s
 resource "azurerm_virtual_machine" "cso_nfs_vm" {
   depends_on = [azurerm_network_interface_security_group_association.cso_nfs_allow_ssh]
 
-  name                  = "${var.name}-case${var.caseNo}-nfs"
+  name                  = "${var.name}-case${var.caseNu}-nfs"
   count                 = var.nfs_backend
   location              = var.location
   resource_group_name   = var.rg
@@ -94,7 +94,7 @@ EOF
   tags = {
     Name          = format("%s-nfs-vm-%s", var.name, count.index + 1)
     resourceOwner = "${var.name}"
-    caseNumber    = "${var.caseNo}"
+    caseNumber    = "${var.caseNu}"
     resourceType  = "instance"
     role          = "nfs"
   }

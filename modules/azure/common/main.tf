@@ -13,7 +13,7 @@ resource "random_string" "mke_password" {
 
 # Storage account for MSR 3.x.x
 resource "azurerm_storage_account" "cso_sa" {
-  name                      = "case${var.caseNo}sa"
+  name                      = "case${var.caseNu}sa"
   resource_group_name       = var.rg
   location                  = var.location
   account_tier              = "Standard"
@@ -22,7 +22,7 @@ resource "azurerm_storage_account" "cso_sa" {
   tags = {
     Name          = "${var.name}-storageAccount"
     resourceOwner = "${var.name}"
-    caseNumber    = "${var.caseNo}"
+    caseNumber    = "${var.caseNu}"
     resourceType  = "storageAccount"
   }
 }

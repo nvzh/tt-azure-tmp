@@ -1,5 +1,5 @@
 resource "azurerm_public_ip" "cso_msr_pub_ip" {
-  name                = "${var.name}-case${var.caseNo}-msr-instance-public-ip-${count.index}"
+  name                = "${var.name}-case${var.caseNu}-msr-instance-public-ip-${count.index}"
   count               = var.msr_count
   location            = var.location
   resource_group_name = var.rg
@@ -8,13 +8,13 @@ resource "azurerm_public_ip" "cso_msr_pub_ip" {
   tags = {
     Name          = format("%s-msr-pubip-%s", var.name, count.index + 1)
     resourceOwner = "${var.name}"
-    caseNumber    = "${var.caseNo}"
+    caseNumber    = "${var.caseNu}"
     resourceType  = "publicIP"
   }
 }
 
 resource "azurerm_network_interface" "cso_msr_interface" {
-  name                = "${var.name}-case${var.caseNo}-msr-net-interface-${count.index}"
+  name                = "${var.name}-case${var.caseNu}-msr-net-interface-${count.index}"
   count               = var.msr_count
   location            = var.location
   resource_group_name = var.rg
@@ -29,7 +29,7 @@ resource "azurerm_network_interface" "cso_msr_interface" {
   tags = {
     Name          = format("%s-msr-int-%s", var.name, count.index + 1)
     resourceOwner = "${var.name}"
-    caseNumber    = "${var.caseNo}"
+    caseNumber    = "${var.caseNu}"
     resourceType  = "networkInterface"
   }
 }
@@ -45,7 +45,7 @@ resource "azurerm_network_interface_security_group_association" "cso_msr_allow_s
 resource "azurerm_virtual_machine" "cso_msr_vm" {
   depends_on = [azurerm_network_interface_security_group_association.cso_msr_allow_ssh]
 
-  name                  = "${var.name}-case${var.caseNo}-msr-${count.index}"
+  name                  = "${var.name}-case${var.caseNu}-msr-${count.index}"
   count                 = var.msr_count
   location              = var.location
   resource_group_name   = var.rg
@@ -91,7 +91,7 @@ EOF
   tags = {
     Name          = format("%s-msr-vm-%s", var.name, count.index + 1)
     resourceOwner = "${var.name}"
-    caseNumber    = "${var.caseNo}"
+    caseNumber    = "${var.caseNu}"
     resourceType  = "instance"
     role          = "msr"
   }

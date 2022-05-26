@@ -1,5 +1,5 @@
 resource "azurerm_public_ip" "cso_manager_pub_ip" {
-  name                = "${var.name}-case${var.caseNo}-manager-public-ip-${count.index}"
+  name                = "${var.name}-case${var.caseNu}-manager-public-ip-${count.index}"
   count               = var.manager_count
   location            = var.location
   resource_group_name = var.rg
@@ -8,13 +8,13 @@ resource "azurerm_public_ip" "cso_manager_pub_ip" {
   tags = {
     Name          = format("%s-manager-pubip-%s", var.name, count.index + 1)
     resourceOwner = "${var.name}"
-    caseNumber    = "${var.caseNo}"
+    caseNumber    = "${var.caseNu}"
     resourceType  = "publicIP"
   }
 }
 
 resource "azurerm_network_interface" "cso_manager_interface" {
-  name                = "${var.name}-case${var.caseNo}-net-manager-${count.index}"
+  name                = "${var.name}-case${var.caseNu}-net-manager-${count.index}"
   count               = var.manager_count
   location            = var.location
   resource_group_name = var.rg
@@ -29,7 +29,7 @@ resource "azurerm_network_interface" "cso_manager_interface" {
   tags = {
     Name          = format("%s-manager-int-%s", var.name, count.index + 1)
     resourceOwner = "${var.name}"
-    caseNumber    = "${var.caseNo}"
+    caseNumber    = "${var.caseNu}"
     resourceType  = "networkInterface"
   }
 }
@@ -39,7 +39,7 @@ resource "azurerm_network_interface" "cso_manager_interface" {
 resource "azurerm_virtual_machine" "cso_manager_vm" {
   depends_on = [azurerm_network_interface_security_group_association.cso_allow_ssh]
 
-  name                  = "${var.name}-case${var.caseNo}-manager-${count.index}"
+  name                  = "${var.name}-case${var.caseNu}-manager-${count.index}"
   count                 = var.manager_count
   location              = var.location
   resource_group_name   = var.rg
@@ -90,7 +90,7 @@ EOF
   tags = {
     Name          = format("%s-manager-vm-%s", var.name, count.index + 1)
     resourceOwner = "${var.name}"
-    caseNumber    = "${var.caseNo}"
+    caseNumber    = "${var.caseNu}"
     resourceType  = "instance"
     role          = "manager"
   }

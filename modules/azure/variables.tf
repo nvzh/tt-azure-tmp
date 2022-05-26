@@ -23,7 +23,7 @@ variable "name" {
   type        = string
   description = "Please Type your name so that You and Cloud admin can identify your resources."
 }
-variable "caseNo" {
+variable "caseNu" {
   type        = string
   description = "This is the case number to track the issue."
   default = "0"

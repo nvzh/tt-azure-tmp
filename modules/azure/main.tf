@@ -33,7 +33,7 @@ module "common" {
   source   = "./common"
   location = var.region
   name     = var.name
-  caseNo   = var.caseNo
+  caseNu   = var.caseNu
   rg       = module.vnet.rg
 }
 
@@ -41,12 +41,12 @@ module "vnet" {
   source   = "./vnet"
   location = var.region
   name     = var.name
-  caseNo   = var.caseNo
+  caseNu   = var.caseNu
 }
 
 module "manager" {
   source                = "./manager"
-  caseNo                = var.caseNo
+  caseNu                = var.caseNu
   manager_count         = var.manager_count
   name                  = var.name
   location              = var.region
@@ -60,7 +60,7 @@ module "manager" {
 
 module "worker" {
   source                = "./worker"
-  caseNo                = var.caseNo
+  caseNu                = var.caseNu
   worker_count          = var.worker_count
   name                  = var.name
   location              = var.region
@@ -74,7 +74,7 @@ module "worker" {
 
 module "msr-worker" {
   source                = "./msr-worker"
-  caseNo                = var.caseNo
+  caseNu                = var.caseNu
   msr_count             = var.msr_count
   name                  = var.name
   location              = var.region
@@ -88,7 +88,7 @@ module "msr-worker" {
 
 module "win-worker" {
   source                = "./win-worker"
-  caseNo                = var.caseNo
+  caseNu                = var.caseNu
   win_worker_count      = var.win_worker_count
   name                  = var.name
   location              = var.region
@@ -103,7 +103,7 @@ module "win-worker" {
 
 module "nfs-node" {
   source                = "./nfs-node"
-  caseNo                = var.caseNo
+  caseNu                = var.caseNu
   nfs_backend           = var.nfs_backend
   name                  = var.name
   location              = var.region

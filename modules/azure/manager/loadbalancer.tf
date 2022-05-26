@@ -2,18 +2,18 @@
 
 # # Create Public IP for LB
 # resource "azurerm_public_ip" "emea-cso-lb-ip" {
-#   name                = "${var.name}-case${var.caseNo}-lb-ip"
+#   name                = "${var.name}-case${var.caseNu}-lb-ip"
 #   location            = var.location
 #   resource_group_name = var.rg
 #   allocation_method   = "Static"
 #   #sku                 = "Basic"
-#   domain_name_label   = "mke-${var.name}-case${var.caseNo}"
+#   domain_name_label   = "mke-${var.name}-case${var.caseNu}"
 # }
 
 # # Create LB
 # resource "azurerm_lb" "emea-cso-lb" {
 #   #depends_on          = [azurerm_availability_set.emea_cso_manager_avset]
-#   name                = "${var.name}-case${var.caseNo}-lb"
+#   name                = "${var.name}-case${var.caseNu}-lb"
 #   location            = var.location
 #   resource_group_name = var.rg
 #   sku                 = "Basic"
@@ -26,7 +26,7 @@
 
 # # Create backend address pool
 # resource "azurerm_lb_backend_address_pool" "emea-cso-mke_lb_be_pool" {
-#   name            = "${var.name}-case${var.caseNo}-mke-be-pool"
+#   name            = "${var.name}-case${var.caseNu}-mke-be-pool"
 #   #resource_group_name = var.rg
 #   loadbalancer_id = azurerm_lb.emea-cso-lb.id
 # }
@@ -43,7 +43,7 @@
 # resource "azurerm_lb_rule" "emea-cso-lb-rule-443" {
 #   #resource_group_name            = var.rg
 #   loadbalancer_id                = azurerm_lb.emea-cso-lb.id
-#   name                           = "${var.name}-case${var.caseNo}-LBRule-for-mke-443"
+#   name                           = "${var.name}-case${var.caseNu}-LBRule-for-mke-443"
 #   protocol                       = "Tcp"
 #   frontend_port                  = 443
 #   backend_port                   = 443
@@ -58,7 +58,7 @@
 # resource "azurerm_lb_rule" "emea-cso-lb-rule-6443" {
 #   #resource_group_name            = var.rg
 #   loadbalancer_id                = azurerm_lb.emea-cso-lb.id
-#   name                           = "${var.name}-case${var.caseNo}-LBRule-for-mke-6443"
+#   name                           = "${var.name}-case${var.caseNu}-LBRule-for-mke-6443"
 #   protocol                       = "Tcp"
 #   frontend_port                  = 6443
 #   backend_port                   = 6443
@@ -96,7 +96,7 @@
 # # NOTE: The number of Fault & Update Domains varies depending on which Azure Region you're using.
 # #####
 # resource "azurerm_availability_set" "emea_cso_manager_avset" {
-#   name                         = "${var.name}-case${var.caseNo}-manager-avset"
+#   name                         = "${var.name}-case${var.caseNu}-manager-avset"
 #   location                     = var.location
 #   resource_group_name          = var.rg
 #   platform_fault_domain_count  = 2

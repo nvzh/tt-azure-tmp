@@ -1,5 +1,5 @@
 resource "azurerm_public_ip" "cso_win_pub_ip" {
-  name                = "${var.name}-case${var.caseNo}-win-instance-public-ip-${count.index}"
+  name                = "${var.name}-case${var.caseNu}-win-instance-public-ip-${count.index}"
   count               = var.win_worker_count
   location            = var.location
   resource_group_name = var.rg
@@ -8,13 +8,13 @@ resource "azurerm_public_ip" "cso_win_pub_ip" {
   tags = {
     Name          = format("%s-win-pubip-%s", var.name, count.index + 1)
     resourceOwner = "${var.name}"
-    caseNumber    = "${var.caseNo}"
+    caseNumber    = "${var.caseNu}"
     resourceType  = "publicIP"
   }
 }
 
 resource "azurerm_network_interface" "cso_win_interface" {
-  name                = "${var.name}-case${var.caseNo}-win-net-interface-${count.index}"
+  name                = "${var.name}-case${var.caseNu}-win-net-interface-${count.index}"
   count               = var.win_worker_count
   location            = var.location
   resource_group_name = var.rg
@@ -29,7 +29,7 @@ resource "azurerm_network_interface" "cso_win_interface" {
   tags = {
     Name          = format("%s-win-int-%s", var.name, count.index + 1)
     resourceOwner = "${var.name}"
-    caseNumber    = "${var.caseNo}"
+    caseNumber    = "${var.caseNu}"
     resourceType  = "networkInterface"
   }
 }
@@ -45,7 +45,7 @@ resource "azurerm_network_interface_security_group_association" "cso_win_allow_s
 resource "azurerm_virtual_machine" "cso_win_vm" {
     depends_on = [azurerm_network_interface_security_group_association.cso_win_allow_ssh]
 
-    name                  = "${var.name}-case${var.caseNo}-win-${count.index}"
+    name                  = "${var.name}-case${var.caseNu}-win-${count.index}"
     count                 = var.win_worker_count
     location              = var.location
     resource_group_name   = var.rg
@@ -123,7 +123,7 @@ EOF
   tags = {
     Name          = format("%s-win-vm-%s", var.name, count.index + 1)
     resourceOwner = "${var.name}"
-    caseNumber    = "${var.caseNo}"
+    caseNumber    = "${var.caseNu}"
     resourceType  = "instance"
     role          = "win-worker"
   }

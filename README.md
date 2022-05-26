@@ -101,7 +101,7 @@ What do you need before using this?
   - [AWS Instance related configurations](#aws-instance-related-configurations)
     - [region=""](#region)
     - [name=""](#name)
-    - [caseNo=""](#caseno)
+    - [caseNu=""](#caseNu)
     - [os_name=""](#os_name)
     - [os_version=""](#os_version)
     - [manager_count=""](#manager_count)
@@ -527,10 +527,10 @@ choose your region. This is where you should write the region name.
 E.g., `eu-central-1`, `us-east-1`, `ap-southeast-1` etc.
 
 ### name=""
-The standard is something like "yourname-caseno". Eg. arif-bosch-4799686
+The standard is something like "yourname-caseNu". Eg. arif-bosch-4799686
 The instance name would like, `arif-bosch-4799686-managerNode-01`, `arif-bosch-4799686-dtrNode-01`
 
-### caseNo=""
+### caseNu=""
 You can specify your case no here. This is just a tag to find your resources. 
 ### os_name=""
 use "ubuntu" or  "redhat" or "centos" or "suse"

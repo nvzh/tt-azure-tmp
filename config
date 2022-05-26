@@ -7,7 +7,7 @@ cloud_provider="azure"
 # azure: germanywestcentral, uksouth, etc.
 # aws: eu-central-1, ap-southeast-1, us-east-1, etc.
 region="germanywestcentral"             
-caseNo="12345678"                    # optional tag to identify resources
+caseNu="12345678"                    # optional tag to identify resources
 
 # Platform Info
 #|-------------------------------------------------------------------------------------------|
