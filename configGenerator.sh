@@ -336,7 +336,7 @@ EOL
                 index=`expr $count - 1` #because index_key starts with 0
                 mgr_address=$(az vm list-ip-addresses \
                 --resource-group "$RG" \
-                --name "$name"-case"$caseNo"-managerVM-"$index"  \
+                --name "$name"-case"$caseNo"-manager-"$index"  \
                 --query "[].virtualMachine.network.publicIpAddresses[0].ipAddress" \
                 --output tsv)
                 cat >> launchpad.yaml << EOL
@@ -368,7 +368,7 @@ EOL
                 index=`expr $count - 1` #because index_key starts with 0
                 mgr_address=$(az vm list-ip-addresses \
                 --resource-group "$RG" \
-                --name "$name"-case"$caseNo"-managerVM-"$index"  \
+                --name "$name"-case"$caseNo"-manager-"$index"  \
                 --query "[].virtualMachine.network.publicIpAddresses[0].ipAddress" \
                 --output tsv)
                 cat >> launchpad.yaml << EOL
@@ -402,7 +402,7 @@ EOL
                 index=`expr $count - 1` #because index_key starts with 0
                 wkr_address=$(az vm list-ip-addresses \
                 --resource-group "$RG" \
-                --name "$name"-case"$caseNo"-workerVM-"$index"  \
+                --name "$name"-case"$caseNo"-worker-"$index"  \
                 --query "[].virtualMachine.network.publicIpAddresses[0].ipAddress" \
                 --output tsv)
                 cat >> launchpad.yaml << EOL
@@ -423,7 +423,7 @@ EOL
                 index=`expr $count - 1` #because index_key starts with 0
                 win_worker_address=$(az vm list-ip-addresses \
                 --resource-group "$RG" \
-                --name "$name"-case"$caseNo"-winVM-"$index"  \
+                --name "$name"-case"$caseNo"-win-"$index"  \
                 --query "[].virtualMachine.network.publicIpAddresses[0].ipAddress" \
                 --output tsv)
                 mkeadminPassword=$(cat ./terraform.tfstate 2>/dev/null | jq -r '.resources[] | select(.name=="mke_password") | .instances[] | .attributes.id' 2>/dev/null)
@@ -447,7 +447,7 @@ EOL
                 index=`expr $count - 1` #because index_key starts with 0
                 msr_address=$(az vm list-ip-addresses \
                 --resource-group "$RG" \
-                --name "$name"-case"$caseNo"-msrVM-"$index"  \
+                --name "$name"-case"$caseNo"-msr-"$index"  \
                 --query "[].virtualMachine.network.publicIpAddresses[0].ipAddress" \
                 --output tsv)
                 cat >> launchpad.yaml << EOL
@@ -477,7 +477,7 @@ EOL
     ####### Generating MSR Configuration
     msr_address=$(az vm list-ip-addresses \
                 --resource-group "$RG" \
-                --name "$name"-case"$caseNo"-msrVM-0  \
+                --name "$name"-case"$caseNo"-msr-0  \
                 --query "[].virtualMachine.network.publicIpAddresses[0].ipAddress" \
                 --output tsv)
     if [[ $nfs_backend == 0 ]] ; then
@@ -493,7 +493,7 @@ EOL
     else
       nfs_address=$(az vm list-ip-addresses \
                 --resource-group "$RG" \
-                --name "$name"-case"$caseNo"-nfsvm  \
+                --name "$name"-case"$caseNo"-nfs  \
                 --query "[].virtualMachine.network.publicIpAddresses[0].ipAddress" \
                 --output tsv)
       cat >> launchpad.yaml << EOL
@@ -535,7 +535,7 @@ EOL
             index=`expr $count - 1` #because index_key starts with 0
             mgr_address=$(az vm list-ip-addresses \
                 --resource-group "$RG" \
-                --name "$name"-case"$caseNo"-managerVM-"$index"  \
+                --name "$name"-case"$caseNo"-manager-"$index"  \
                 --query "[].virtualMachine.network.publicIpAddresses[0].ipAddress" \
                 --output tsv)
             cat >> launchpad.yaml << EOL
@@ -569,7 +569,7 @@ EOL
           index=`expr $count - 1` #because index_key starts with 0
           msr_address=$(az vm list-ip-addresses \
                 --resource-group "$RG" \
-                --name "$name"-case"$caseNo"-msrVM-"$index"  \
+                --name "$name"-case"$caseNo"-msr-"$index"  \
                 --query "[].virtualMachine.network.publicIpAddresses[0].ipAddress" \
                 --output tsv)
           cat >> launchpad.yaml << EOL
@@ -589,7 +589,7 @@ EOL
                 index=`expr $count - 1` #because index_key starts with 0
                 wkr_address=$(az vm list-ip-addresses \
                 --resource-group "$RG" \
-                --name "$name"-case"$caseNo"-workerVM-"$index"  \
+                --name "$name"-case"$caseNo"-worker-"$index"  \
                 --query "[].virtualMachine.network.publicIpAddresses[0].ipAddress" \
                 --output tsv)
                 cat >> launchpad.yaml << EOL
@@ -610,7 +610,7 @@ EOL
                 index=`expr $count - 1` #because index_key starts with 0
                 win_worker_address=$(az vm list-ip-addresses \
                 --resource-group "$RG" \
-                --name "$name"-case"$caseNo"-winVM-"$index"  \
+                --name "$name"-case"$caseNo"-win-"$index"  \
                 --query "[].virtualMachine.network.publicIpAddresses[0].ipAddress" \
                 --output tsv)
                 mkeadminPassword=$(cat ./terraform.tfstate 2>/dev/null | jq -r '.resources[] | select(.name=="mke_password") | .instances[] | .attributes.id' 2>/dev/null)
