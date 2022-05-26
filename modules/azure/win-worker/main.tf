@@ -4,6 +4,13 @@ resource "azurerm_public_ip" "cso_win_pub_ip" {
   location            = var.location
   resource_group_name = var.rg
   allocation_method   = "Dynamic"
+
+  tags = {
+    Name          = format("%s-win-pubip-%s", var.name, count.index + 1)
+    resourceOwner = "${var.name}"
+    caseNumber    = "${var.caseNo}"
+    resourceType  = "publicIP"
+  }
 }
 
 resource "azurerm_network_interface" "cso_win_interface" {
@@ -17,6 +24,13 @@ resource "azurerm_network_interface" "cso_win_interface" {
     subnet_id                     = var.subnet_id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = element(azurerm_public_ip.cso_win_pub_ip.*.id, count.index)
+  }
+
+  tags = {
+    Name          = format("%s-win-int-%s", var.name, count.index + 1)
+    resourceOwner = "${var.name}"
+    caseNumber    = "${var.caseNo}"
+    resourceType  = "networkInterface"
   }
 }
 
@@ -105,6 +119,14 @@ EOF
     provision_vm_agent        = true
     enable_automatic_upgrades = true
   }
+
+  tags = {
+    Name          = format("%s-win-vm-%s", var.name, count.index + 1)
+    resourceOwner = "${var.name}"
+    caseNumber    = "${var.caseNo}"
+    resourceType  = "instance"
+    role          = "win-worker"
+  }
 }
 
 resource "azurerm_virtual_machine_extension" "startup" {
@@ -120,4 +142,4 @@ resource "azurerm_virtual_machine_extension" "startup" {
     "commandToExecute": "powershell -ExecutionPolicy unrestricted -NoProfile -NonInteractive -command \"cp c:/azuredata/customdata.bin c:/azuredata/install.ps1; c:/azuredata/install.ps1\""
   }
 SETTINGS
-  }
+}

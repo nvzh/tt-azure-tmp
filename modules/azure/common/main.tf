@@ -18,4 +18,11 @@ resource "azurerm_storage_account" "cso_sa" {
   location                  = var.location
   account_tier              = "Standard"
   account_replication_type  = "LRS"
+
+  tags = {
+    Name          = "${var.name}-storageAccount"
+    resourceOwner = "${var.name}"
+    caseNumber    = "${var.caseNo}"
+    resourceType  = "storageAccount"
+  }
 }

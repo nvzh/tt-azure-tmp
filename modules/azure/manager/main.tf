@@ -4,6 +4,13 @@ resource "azurerm_public_ip" "cso_manager_pub_ip" {
   location            = var.location
   resource_group_name = var.rg
   allocation_method   = "Dynamic"
+
+  tags = {
+    Name          = format("%s-manager-pubip-%s", var.name, count.index + 1)
+    resourceOwner = "${var.name}"
+    caseNumber    = "${var.caseNo}"
+    resourceType  = "publicIP"
+  }
 }
 
 resource "azurerm_network_interface" "cso_manager_interface" {
@@ -17,6 +24,13 @@ resource "azurerm_network_interface" "cso_manager_interface" {
     subnet_id                     = var.subnet_id
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = element(azurerm_public_ip.cso_manager_pub_ip.*.id, count.index)
+  }
+
+  tags = {
+    Name          = format("%s-manager-int-%s", var.name, count.index + 1)
+    resourceOwner = "${var.name}"
+    caseNumber    = "${var.caseNo}"
+    resourceType  = "networkInterface"
   }
 }
 
@@ -71,6 +85,14 @@ EOF
       key_data = file("/terraTrain/key-pair.pub")
       path     = "/home/azureuser/.ssh/authorized_keys"
     }
+  }
+
+  tags = {
+    Name          = format("%s-manager-vm-%s", var.name, count.index + 1)
+    resourceOwner = "${var.name}"
+    caseNumber    = "${var.caseNo}"
+    resourceType  = "instance"
+    role          = "manager"
   }
 }
 
