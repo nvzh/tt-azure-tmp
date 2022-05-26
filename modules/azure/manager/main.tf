@@ -3,7 +3,7 @@ resource "azurerm_public_ip" "cso_manager_pub_ip" {
   count               = var.manager_count
   location            = var.location
   resource_group_name = var.rg
-  allocation_method   = "Dynamic"
+  allocation_method   = "Static"
 
   tags = {
     Name          = format("%s-manager-pubip-%s", var.name, count.index + 1)
