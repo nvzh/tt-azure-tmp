@@ -4,6 +4,12 @@
 resource "azurerm_resource_group" "rg" {
   name     = "${var.name}-case${var.caseNo}-rg"
   location = var.location
+
+  tags = {
+    Name = "${var.name}-resourceGroup"
+    resourceOwner = var.name
+    caseNumber    = var.caseNo
+  }
 }
 
 ##### 
